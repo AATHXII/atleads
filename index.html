@@ -1049,6 +1049,8 @@ html:not([data-hero]) .hero__content { padding-top: 72px; padding-bottom: 0; }
   background: radial-gradient(ellipse 50% 50% at 50% 50%, var(--accent-glow), transparent 70%); opacity: .40; pointer-events: none; z-index: 1; filter: blur(20px); }
 .hero__globe { position: absolute; left: 50%; top: var(--gy); width: calc(var(--gd) * 1.4); aspect-ratio: 1;
   transform: translate(-50%, -50%); pointer-events: none; z-index: 1; animation: globeIn 2s cubic-bezier(.2,.7,.2,1) both .15s; }
+[data-theme="blue"]  { --globe-arcs: url('assets/globe-arcs-blue.png'); }
+[data-theme="green"] { --globe-arcs: url('assets/globe-arcs-green.png'); }
 html:not([data-js]) .hero__globe { background: var(--globe) center / 100% 100% no-repeat; }
 .hero__globe canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 @keyframes globeIn { from { opacity: 0; transform: translate(-50%, -50%) scale(.92); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
@@ -1281,6 +1283,20 @@ html:not([data-js]) .hero__globe { background: var(--globe) center / 100% 100% n
 .format-sec .sysx__card--fmt .sysx__fmt .h3 { color: var(--on-fill); }
 .format-sec .sysx__card--fmt .sysx__fmt p { color: var(--on-fill-muted); }
 .format-sec .sysx__card--fmt .badge { background: rgba(255,255,255,.22); color: var(--on-fill); box-shadow: none; }
+/* полное погружение (22.11): первый экран и «Цифры» на весь экран; отступы «Как мы работаем» и «Формула» */
+html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !important; }
+#numbers.section { min-height: clamp(780px, 100svh, 1000px); display: flex; flex-direction: column; justify-content: center; }
+#numbers.section > .container { width: 100%; }
+#how.section { padding-top: 110px !important; padding-bottom: 100px !important; }
+#formula.section { padding-top: 100px !important; }
+.form__consent { margin-top: 12px; font-size: 12.5px; line-height: 1.45; color: var(--dim); text-align: center; }
+.form__consent a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+@media (max-width: 760px) {
+  html:not([data-hero]) .hero { min-height: clamp(700px, 100svh, 940px) !important; }
+  #numbers.section { min-height: clamp(680px, 100svh, 940px); padding-top: 40px !important; padding-bottom: 40px !important; }
+  #how.section { padding-top: 42px !important; padding-bottom: 48px !important; }
+  #formula.section { padding-top: 44px !important; }
+}
 /* этапы системы: белые карточки на тёмном фоне */
 #system .steps .step { background: #fff; --text: #0b1020; --muted: #4a5568; --light-muted: #4a5568; color: #0b1020; border: 0;
   box-shadow: 0 24px 60px -30px rgba(0,0,0,.7); }
@@ -1726,7 +1742,7 @@ html:not([data-js]) .hero__globe { background: var(--globe) center / 100% 100% n
 <footer class="footer">
   <div class="container footer__inner">
     <a class="logo" href="#" style="color:var(--text)"><svg class="logo__mark logo__mark--krug" viewBox="0 0 512 512" aria-hidden="true"><circle cx="256" cy="256" r="256" fill="#05070D"/><g stroke="#1A44C2" stroke-width="58" stroke-linecap="round"><line x1="118.0" y1="256.0" x2="394.0" y2="256.0"/><line x1="158.4" y1="158.4" x2="353.6" y2="353.6"/><line x1="256.0" y1="118.0" x2="256.0" y2="394.0"/><line x1="353.6" y1="158.4" x2="158.4" y2="353.6"/></g><circle cx="256" cy="256" r="46" fill="#1A44C2"/></svg>at leads</a>
-    <div class="footer__links"><a href="#">Instagram</a><a href="#">YouTube</a><a href="#">Telegram</a><a href="#">Политика обработки данных</a></div>
+    <div class="footer__links"><a href="#">Instagram</a><a href="#">YouTube</a><a href="#">Telegram</a><a href="privacy.html">Политика обработки данных</a></div>
   </div>
 </footer>
 <dialog class="modal" id="lead-modal" aria-labelledby="modal-t">
@@ -1755,6 +1771,7 @@ html:not([data-js]) .hero__globe { background: var(--globe) center / 100% 100% n
           <label class="field"><span>Что сейчас мешает расти <i>(необязательно)</i></span><textarea class="input" name="problem"></textarea></label>
           <label class="consent"><input type="checkbox" name="consent" required><i><svg><use href="#i-check"/></svg></i>Согласие на обработку данных</label>
           <button class="btn btn--primary" type="submit">Записаться на разбор<svg><use href="#i-arrow"/></svg></button>
+          <p class="form__consent">Нажимая кнопку, вы соглашаетесь с&nbsp;<a href="privacy.html" target="_blank" rel="noopener">политикой обработки данных</a>.</p>
         </div>
         <div class="form__done" hidden><span class="pill__dot"></span><p>Заявка у нас. Атай или ассистент пишет вам и предлагает время созвона.</p></div>
       </form>
@@ -1878,7 +1895,7 @@ html:not([data-js]) .hero__globe { background: var(--globe) center / 100% 100% n
     return { p: pts, ph: (k * 0.37) % 1, sp: (0.11 + (k % 4) * 0.025) * 1.2 };
   });
   var W = 0, dpr = 1, R = 0, C = 0, rot = -0.55, tilt = 0.22, col = {}, live = true, last = 0, t0 = 0;
-  var LOOP = 0; /* секунды петли: режим записи анимации для холста (window.__globeFrame) */
+  var LAYER = 0, LOOP = 0; /* секунды петли: режим записи анимации для холста (window.__globeFrame) */
   function rgb(h) { h = h.trim(); if (h[0] === '#') { if (h.length === 4) h = '#' + h[1]+h[1]+h[2]+h[2]+h[3]+h[3]; return [parseInt(h.substr(1,2),16), parseInt(h.substr(3,2),16), parseInt(h.substr(5,2),16)]; } var m = h.match(/[\d.]+/g); return m ? m.slice(0,3).map(Number) : [90,160,255]; }
   function colors() { var cs = getComputedStyle(document.documentElement); col.a = rgb(cs.getPropertyValue('--accent') || '#3d8bff'); col.b = rgb(cs.getPropertyValue('--accent-2') || '#5ee6ff'); }
   function rgba(c, a) { return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')'; }
@@ -1895,6 +1912,7 @@ html:not([data-js]) .hero__globe { background: var(--globe) center / 100% 100% n
     ca = Math.cos(rot); sa = Math.sin(rot); ct = Math.cos(tilt); st = Math.sin(tilt);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, W);
     var A = col.a, B = col.b, WH = [255,255,255];
+    if (LAYER !== 2) {
     // атмосфера
     var g = ctx.createRadialGradient(C, C, R * .9, C, C, R * 1.22);
     g.addColorStop(0, rgba(A, 0)); g.addColorStop(.38, rgba(A, .27)); g.addColorStop(.55, rgba(B, .09)); g.addColorStop(1, rgba(A, 0));
@@ -1925,11 +1943,14 @@ html:not([data-js]) .hero__globe { background: var(--globe) center / 100% 100% n
     // блик по краю
     ctx.strokeStyle = rgba(B, .5); ctx.lineWidth = 1.2; ctx.shadowColor = rgba(A, .81); ctx.shadowBlur = 16;
     ctx.beginPath(); ctx.arc(C, C, R, Math.PI * 1.02, Math.PI * 1.98); ctx.stroke(); ctx.shadowBlur = 0;
+    }
+    if (LAYER !== 1) {
     // дуги
     var T = now / 1000;
     ctx.lineCap = 'round';
     for (var n = 0; n < ARCS.length; n++) {
-      var arc = ARCS[n], pts = arc.p, L = pts.length, pr = LOOP ? ((T * 1.4 * Math.max(1, Math.round(LOOP * arc.sp / 1.4)) / LOOP + arc.ph) % 1.4) : still ? (0.35 + 0.5 * ((n * .61) % 1)) : ((T * arc.sp + arc.ph) % 1.4);
+      var arc = ARCS[n], pts = arc.p, L = pts.length, pr = LOOP ? ((T * 2.8 * Math.max(1, Math.round(LOOP * arc.sp * 2.5 / 2.8)) / LOOP + arc.ph * 2) % 2.8) : still ? (0.35 + 0.5 * ((n * .61) % 1)) : ((T * arc.sp * 2.5 + arc.ph * 2) % 2.8);
+      if (pr >= 1.4) pr = 2; /* пауза: огонёк не летит */
       var head = Math.min(1, pr), tail = Math.max(0, pr - .45), Q = [];
       for (var e = 0; e < L; e++) { var pp = pts[e], o = proj(pp[0], pp[1], pp[2], [0,0,0]); var dx = o[0] - C, dy = o[1] - C; o[3] = o[2] > 0 || dx * dx + dy * dy > R * R * 1.0; Q.push(o); }
       // тусклый путь
@@ -1942,10 +1963,13 @@ html:not([data-js]) .hero__globe { background: var(--globe) center / 100% 100% n
       // волна в точке прибытия
       if (pr >= 1 && pr < 1.4 && Q[L-1][3]) { var w = (pr - 1) / .4; ctx.strokeStyle = rgba(B, (1 - w) * .8); ctx.lineWidth = 1.2; ctx.beginPath(); ctx.ellipse(Q[L-1][0], Q[L-1][1], 3 + w * 18, (3 + w * 18) * Math.max(.3, Q[L-1][2]), 0, 0, 6.3); ctx.stroke(); }
     }
+    }
+    if (LAYER !== 2) {
     // города
     for (var cI = 0; cI < CITY.length; cI++) { var cc = CITY[cI]; proj(cc[0], cc[1], cc[2], P); if (P[2] <= .08) continue;
       ctx.fillStyle = rgba(B, .22 * P[2]); ctx.beginPath(); ctx.arc(P[0], P[1], 7 * P[2], 0, 6.3); ctx.fill();
       ctx.fillStyle = rgba(mix(B, WH, .6), .95); ctx.beginPath(); ctx.arc(P[0], P[1], 2.2, 0, 6.3); ctx.fill(); }
+  }
   }
   function frame(now) {
     if (!live) { last = 0; return; }
@@ -1955,7 +1979,7 @@ html:not([data-js]) .hero__globe { background: var(--globe) center / 100% 100% n
   colors(); size(); host.classList.add('is-live');
   new MutationObserver(function () { colors(); if (still) draw(0); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   addEventListener('resize', function () { size(); if (still) draw(0); });
-  window.__globeFrame = function (t, loop, spin) { LOOP = loop; var r0 = rot; if (spin) rot = r0 + 2 * Math.PI * t / loop; draw(t * 1000); rot = r0; };
+  window.__globeFrame = function (t, loop, spin, layer) { LOOP = loop; LAYER = layer || 0; var r0 = rot; if (spin) rot = r0 + 2 * Math.PI * t / loop; draw(t * 1000); rot = r0; LAYER = 0; };
   if (still) { draw(0); return; }
   new IntersectionObserver(function (e) { var was = live; live = e[0].isIntersecting; if (live && !was) requestAnimationFrame(frame); }).observe(host);
   requestAnimationFrame(frame);
