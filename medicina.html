@@ -1416,6 +1416,14 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
   .about .socials { margin-top: 24px; }
 }
 </style>
+<style>/* 26.11.2026: заголовок первого экрана на телефоне ровными строками */
+@media (max-width:760px){
+  .hero h1{text-wrap:balance}
+  .hero h1 br.br-d{display:inline}
+  .hero h1 em{display:inline-block;text-wrap:balance}
+  html:not([data-hero]) .hero h1{font-size:clamp(27px,8.2vw,33px);line-height:1.04}
+}
+</style>
 <style>/* нишевые страницы */
 .stats--two .stat--main{grid-row:auto}
 .stat__v .u{font-size:.4em;letter-spacing:-.02em;margin-left:.08em}
@@ -1505,8 +1513,7 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
 
   <div class="container hero__content">
     <span class="pill"><span class="pill__dot"></span>Системный маркетинг для медицинских клиник</span>
-    <h1>Стабильный поток пациентов <br class="br-d"><em>для медклиник и&nbsp;врачей <br class="br-d">с&nbsp;окупаемостью 500%+</em></h1>
-    <p class="hero__sub">Получайте от&nbsp;100 заявок в&nbsp;день</p>
+    <h1>Масштабируем поток пациентов <br class="br-d"><em>с&nbsp;окупаемостью 500%+</em></h1>
     <div class="hero__stats">
       <span><b>$7,5+&nbsp;млн</b> выручки клиентам</span>
       <span><b>$1,5+&nbsp;млн</b> рекламного бюджета</span>

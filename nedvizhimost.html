@@ -1416,6 +1416,14 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
   .about .socials { margin-top: 24px; }
 }
 </style>
+<style>/* 26.11.2026: заголовок первого экрана на телефоне ровными строками */
+@media (max-width:760px){
+  .hero h1{text-wrap:balance}
+  .hero h1 br.br-d{display:inline}
+  .hero h1 em{display:inline-block;text-wrap:balance}
+  html:not([data-hero]) .hero h1{font-size:clamp(27px,8.2vw,33px);line-height:1.04}
+}
+</style>
 <style>/* нишевые страницы */
 .stats--two .stat--main{grid-row:auto}
 .stat__v .u{font-size:.4em;letter-spacing:-.02em;margin-left:.08em}
@@ -1455,7 +1463,7 @@ html:not([data-js]) .hero__house{background:var(--house) center bottom / auto 10
 @keyframes houseIn{from{opacity:0;transform:translateX(-50%) translateY(24px)}to{opacity:1;transform:translateX(-50%)}}
 [data-shot]:not([data-capture]) .hero__house{animation:none}
 /* 26.11.2026: на телефоне башни внизу, под текстом затемнение */
-@media (max-width:760px){.hero__house{opacity:.75}.hero__house::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,var(--bg) 0%,rgba(5,7,13,.85) 45%,rgba(5,7,13,.2) 80%,transparent 100%)}}
+@media (max-width:760px){.hero__house::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,var(--bg) 0%,rgba(5,7,13,.6) 28%,transparent 46%)}.hero__stats,.hero__cta .btn-note{text-shadow:0 1px 3px #000,0 0 14px rgba(0,0,0,.95)}}
 </style>
 </head>
 <body>
@@ -1502,10 +1510,10 @@ html:not([data-js]) .hero__house{background:var(--house) center bottom / auto 10
   <span class="chip chip--4"><i><svg><use href="#i-spark"/></svg></i>Трафик</span>
 
   <div class="container hero__content">
-    <span class="pill"><span class="pill__dot"></span>Системный маркетинг для застройщиков и&nbsp;строительных компаний</span>
-    <h1>Растим продажи квартир <br class="br-d"><em>через стратегию, аналитику и&nbsp;трафик</em></h1>
+    <span class="pill"><span class="pill__dot"></span>Системный маркетинг в&nbsp;Meta, Google и&nbsp;TikTok</span>
+    <h1>Масштабируем продажи квартир <br class="br-d"><em>через стратегию, аналитику и&nbsp;трафик</em></h1>
     <div class="hero__stats">
-      <span><b>$7,5+&nbsp;млн</b> выручки клиентам</span>
+      <span><b>от&nbsp;300</b> заявок в&nbsp;день</span>
       <span><b>$1,5+&nbsp;млн</b> рекламного бюджета</span>
       <span><b>30&nbsp;проектов</b> в&nbsp;10&nbsp;странах</span>
     </div>
@@ -1521,7 +1529,7 @@ html:not([data-js]) .hero__house{background:var(--house) center bottom / auto 10
   <div class="container">
     <h2 class="h2 numbers__h">Цифры наших проектов</h2>
     <div class="stats">
-      <div class="stat stat--main"><span class="stat__k">Целевые заявки</span><div class="stat__v"><small>От</small>200</div><p>целевых заявок в&nbsp;день в&nbsp;вашу CRM-систему</p></div><div class="stat"><span class="stat__k">Выручка клиентов</span><div class="stat__v"><small>Более</small>$7,5&nbsp;млн</div><p>выручки клиентам</p></div><div class="stat"><span class="stat__k">Рекламный бюджет</span><div class="stat__v"><small>Более</small>$1,5&nbsp;млн</div><p>рекламного бюджета</p></div>
+      <div class="stat stat--main"><span class="stat__k">Целевые заявки</span><div class="stat__v"><small>От</small>300</div><p>целевых заявок в&nbsp;день в&nbsp;вашу CRM-систему</p></div><div class="stat"><span class="stat__k">Выручка клиентов</span><div class="stat__v"><small>Более</small>$7,5&nbsp;млн</div><p>выручки клиентам</p></div><div class="stat"><span class="stat__k">Рекламный бюджет</span><div class="stat__v"><small>Более</small>$1,5&nbsp;млн</div><p>рекламного бюджета</p></div>
     </div>
   </div>
 </section>
@@ -1989,7 +1997,7 @@ html:not([data-js]) .hero__house{background:var(--house) center bottom / auto 10
     });
     var mnx = Math.min.apply(0, xs), mxx = Math.max.apply(0, xs), mny = Math.min.apply(0, ys), mxy = Math.max.apply(0, ys);
     var mob = W < 760;
-    S = Math.min(H * (mob ? 0.34 : 0.86) / (mxy - mny), W * (mob ? 0.5 : 0.36) / (mxx - mnx)); // 26.11.2026: на телефоне башни ниже кнопки
+    S = Math.min(H * (mob ? 0.58 : 0.86) / (mxy - mny), W * (mob ? 0.72 : 0.36) / (mxx - mnx)); // 26.11.2026: на телефоне башни ниже кнопки
     OX = W / 2 - S * (mnx + mxx) / 2; OY = H * 0.995 + S * mny;
   }
   function size() {

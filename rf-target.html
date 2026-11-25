@@ -1416,6 +1416,14 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
   .about .socials { margin-top: 24px; }
 }
 </style>
+<style>/* 26.11.2026: заголовок первого экрана на телефоне ровными строками */
+@media (max-width:760px){
+  .hero h1{text-wrap:balance}
+  .hero h1 br.br-d{display:inline}
+  .hero h1 em{display:inline-block;text-wrap:balance}
+  html:not([data-hero]) .hero h1{font-size:clamp(27px,8.2vw,33px);line-height:1.04}
+}
+</style>
 <style>/* нишевые страницы */
 .stats--two .stat--main{grid-row:auto}
 .stat__v .u{font-size:.4em;letter-spacing:-.02em;margin-left:.08em}
@@ -1491,8 +1499,8 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
   <span class="chip chip--4"><i><svg><use href="#i-spark"/></svg></i>Трафик</span>
 
   <div class="container hero__content">
-    <span class="pill"><span class="pill__dot"></span>Реклама в&nbsp;Instagram и&nbsp;Facebook на&nbsp;аудиторию в&nbsp;России в&nbsp;2026 году</span>
-    <h1>Приводим клиентов через Meta Ads, <br class="br-d"><em>обходя блокировку в&nbsp;России в&nbsp;2026 году</em></h1>
+    <span class="pill"><span class="pill__dot"></span>Реклама в&nbsp;Instagram в&nbsp;России</span>
+    <h1>Приводим клиентов из&nbsp;России <br class="br-d"><em>благодаря Meta Ads</em></h1>
     <div class="hero__stats">
       <span><b>600+&nbsp;млн&nbsp;₽</b> выручки клиентам</span>
       <span><b>120+&nbsp;млн&nbsp;₽</b> рекламного бюджета</span>
