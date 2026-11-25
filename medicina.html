@@ -1453,6 +1453,11 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
 .cases--4 .case__who{min-height:2.4em}
 .cases-note{margin-top:22px;font-size:17px;color:var(--light-muted,#4a5568)}
 .chart-card__big.reach-big small{display:block;margin:12px 0 0;font-size:17px}
+.case__ab{margin-top:16px;display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 6px;font-size:13px;color:var(--muted)}
+.case__ab span{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+.case__ab b{font-size:17px;font-weight:600;color:var(--text);margin-right:2px}
+.case__ab i{font-style:normal;color:var(--accent);margin:0 2px}
+.case__ab em{flex-basis:100%;font-style:normal;font-weight:700;color:var(--accent);font-size:15px;margin-top:2px}
 /* 26.11.2026: строка под заголовком первого экрана */
 .hero__sub{margin:20px auto 0;max-width:760px;font-size:22px;line-height:1.35;color:#fff;letter-spacing:-.01em}
 @media (max-width:760px){.hero__sub{font-size:17px;margin-top:14px}}
@@ -1593,12 +1598,11 @@ html:not([data-js]) .hero__dna{background:url('assets/dna-photo.webp') right cen
       <h3 class="h2" style="font-size:clamp(30px,3.4vw,48px)">Наши кейсы в&nbsp;медицине</h3>
     </div>
     <div class="cases cases--4">
-      <div class="card case"><span class="case__kind">Стоматология</span><h3 class="case__who">Стоматологические клиники</h3><div class="case__num">350<small>целевых заявок в&nbsp;день</small></div><div class="case__romi"><span>Окупаемость</span><b>637%</b></div></div>
-      <div class="card case"><span class="case__kind">Хирургия</span><h3 class="case__who">Хирург, который делает ринопластику</h3><div class="case__num">от&nbsp;500<small>заявок в&nbsp;день</small></div><div class="case__romi"><span>Окупаемость</span><b>505%</b></div></div>
-      <div class="card case"><span class="case__kind">Восстановление</span><h3 class="case__who">Восстановительная клиника</h3><div class="case__num">400<small>заявок в&nbsp;день</small></div><div class="case__romi"><span>Окупаемость</span><b>733%</b></div></div>
-      <div class="card case"><span class="case__kind">Эстетика</span><h3 class="case__who">Эстетическая клиника</h3><div class="case__num">от&nbsp;700<small>заявок в&nbsp;день</small></div><div class="case__romi"><span>Окупаемость</span><b>656%</b></div></div>
+      <div class="card case"><span class="case__kind">Стоматология</span><h3 class="case__who">Стоматологические клиники</h3><div class="case__num">350<small>целевых заявок в&nbsp;день</small></div><div class="case__ab"><span>Точка А</span><b>≈120</b><i>→</i><span>Точка Б</span><b>350</b><em>рост ×3</em></div><div class="case__romi"><span>Окупаемость</span><b>637%</b></div></div>
+      <div class="card case"><span class="case__kind">Хирургия</span><h3 class="case__who">Хирург, который делает ринопластику</h3><div class="case__num">от&nbsp;500<small>заявок в&nbsp;день</small></div><div class="case__ab"><span>Точка А</span><b>≈250</b><i>→</i><span>Точка Б</span><b>500</b><em>рост ×2</em></div><div class="case__romi"><span>Окупаемость</span><b>505%</b></div></div>
+      <div class="card case"><span class="case__kind">Восстановление</span><h3 class="case__who">Восстановительная клиника</h3><div class="case__num">400<small>заявок в&nbsp;день</small></div><div class="case__ab"><span>Точка А</span><b>≈200</b><i>→</i><span>Точка Б</span><b>400</b><em>рост ×2</em></div><div class="case__romi"><span>Окупаемость</span><b>733%</b></div></div>
+      <div class="card case"><span class="case__kind">Эстетика</span><h3 class="case__who">Эстетическая клиника</h3><div class="case__num">от&nbsp;700<small>заявок в&nbsp;день</small></div><div class="case__ab"><span>Точка А</span><b>≈230</b><i>→</i><span>Точка Б</span><b>700</b><em>рост ×3</em></div><div class="case__romi"><span>Окупаемость</span><b>656%</b></div></div>
     </div>
-    <p class="lead cases-note">Во&nbsp;всех проектах рост в&nbsp;2–3 раза от&nbsp;точки&nbsp;А.</p>
     <div class="center-cta" style="margin-top:32px">
       <a class="btn btn--primary" href="#form">Записаться на разбор<svg><use href="#i-arrow"/></svg></a>
     </div>
