@@ -1454,18 +1454,17 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
   html:not([data-hero]) .hero .hero__content{padding-top:84px !important;padding-bottom:36px !important}
 }
 </style>
-<style>/* 26.11.2026: первый экран «Медицины» — фото ДНК (вариант C, выбор Атая; картинки сгенерированы в ChatGPT) */
-.hero__dnaph{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden;animation:dnaIn 1.6s ease both .1s}
-.hero__dnaph::before{content:"";position:absolute;top:0;bottom:0;right:0;left:16%;background:url('assets/dna-photo.webp') right center / cover no-repeat;-webkit-mask-image:linear-gradient(90deg,transparent,#000 22%);mask-image:linear-gradient(90deg,transparent,#000 22%);transform-origin:70% 40%;animation:dnaDrift 26s ease-in-out infinite alternate}
-.hero__dnaph::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 50% 40% at 50% 54%, rgba(5,7,13,.9), rgba(5,7,13,.35) 60%, rgba(5,7,13,0) 85%), linear-gradient(180deg, transparent 70%, var(--bg) 100%)}
+<style>/* 26.11.2026: первый экран «Медицины» — стеклянная ДНК, вращается и светится (dna-glass.js); без JS — фото варианта C */
+.hero__dna{position:absolute;inset:0;pointer-events:none;z-index:1;animation:dnaIn 1.6s ease both .1s}
+.hero__dna canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hero__dna::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 44% 34% at 50% 53%, rgba(5,7,13,.72), rgba(5,7,13,.25) 62%, rgba(5,7,13,0) 85%), linear-gradient(180deg, transparent 75%, var(--bg) 100%)}
+html:not([data-js]) .hero__dna{background:url('assets/dna-photo.webp') right center / cover no-repeat}
 @keyframes dnaIn{from{opacity:0}to{opacity:1}}
-@keyframes dnaDrift{from{transform:scale(1)}to{transform:scale(1.07) translateY(-1%)}}
 @media (max-width:760px){
-  .hero__dnaph::before{left:0;-webkit-mask-image:none;mask-image:none;background:url('assets/dna-photo-m.webp') center top / 100% auto no-repeat}
-  .hero__dnaph::after{background:linear-gradient(180deg, rgba(5,7,13,.15) 0, rgba(5,7,13,.35) 22%, rgba(5,7,13,.82) 42%, var(--bg) 60%)}
+  .hero__dna::after{background:linear-gradient(180deg, transparent 0, transparent 22%, rgba(5,7,13,.7) 40%, rgba(5,7,13,.88) 60%, var(--bg) 100%)}
+  html:not([data-js]) .hero__dna{background:url('assets/dna-photo-m.webp') center top / 100% auto no-repeat}
 }
-@media (prefers-reduced-motion:reduce){.hero__dnaph::before{animation:none}}
-[data-shot]:not([data-capture]) .hero__dnaph,[data-shot]:not([data-capture]) .hero__dnaph::before{animation:none}
+[data-shot]:not([data-capture]) .hero__dna{animation:none}
 </style>
 </head>
 <body>
@@ -1488,7 +1487,7 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
   <div class="hero__aurora" aria-hidden="true"><span class="a1"></span><span class="a2"></span><span class="a3"></span><span class="a4"></span></div>
   <div class="hero__horizon" aria-hidden="true"></div>
   <div class="hero__glow" aria-hidden="true"></div>
-  <div class="hero__dnaph" aria-hidden="true"></div>
+  <div class="hero__dna" aria-hidden="true"><canvas></canvas></div>
   <div class="hero__scrim" aria-hidden="true"></div>
 
   <nav class="nav">
@@ -1952,6 +1951,95 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
   if (still) { draw(0); return; }
   new IntersectionObserver(function (e) { var was = live; live = e[0].isIntersecting; if (live && !was) requestAnimationFrame(frame); }).observe(host);
   requestAnimationFrame(frame);
+})();
+</script>
+<script>
+/* Стеклянная спираль ДНК (страница «Медицина», 2026-11-26, по просьбе Атая: чёткая, вращается и светится).
+   Стиль — вариант C (матовое стекло с синим свечением). Canvas 2D, без библиотек. */
+(function () {
+  var host = document.querySelector('.hero__dna'); if (!host) return;
+  var cv = host.querySelector('canvas'), ctx = cv.getContext('2d');
+  var q = new URLSearchParams(location.search);
+  var still = !q.has('capture') && (q.has('shot') || matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var W = 0, H = 0, dpr = 1, mob = false, A = [0, 0], B = [0, 0], ax = 0, ay = 0, nx = 0, ny = 0, R = 100, TW = 26, TURNS = 2.6, N = 240, RUNGS = 34;
+  var BG = [5, 7, 13], FAR = [34, 58, 104], NEAR = [168, 202, 240], GLASS = [214, 230, 250], GLOW = [61, 139, 255], CYAN = [110, 200, 255];
+  function mix(a, b, t) { return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]; }
+  function css(c, a) { return 'rgba(' + (c[0] | 0) + ',' + (c[1] | 0) + ',' + (c[2] | 0) + ',' + (a == null ? 1 : a) + ')'; }
+  function sm(e0, e1, x) { var t = Math.max(0, Math.min(1, (x - e0) / (e1 - e0))); return t * t * (3 - 2 * t); }
+  function size() {
+    var r = host.getBoundingClientRect(); dpr = Math.min(2, window.devicePixelRatio || 1);
+    W = Math.round(r.width); H = Math.round(r.height); cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    mob = W < 760;
+    if (mob) { A = [-0.14 * W, 0.40 * H]; B = [1.14 * W, 0.0 * H]; R = Math.min(0.12 * W, 50); TURNS = 2.1; N = 170; RUNGS = 24; }
+    else { A = [0.08 * W, 1.14 * H]; B = [1.06 * W, -0.14 * H]; R = Math.min(0.125 * H, 126); TURNS = 2.5; N = 240; RUNGS = 32; }
+    TW = R * 0.27;
+    ax = B[0] - A[0]; ay = B[1] - A[1]; var L = Math.hypot(ax, ay); nx = -ay / L; ny = ax / L;
+  }
+  function pt(s, th) { var c = Math.cos(th); return [A[0] + ax * s + nx * R * c, A[1] + ay * s + ny * R * c, Math.sin(th)]; }
+  function fade(s) { return sm(0, 0.07, s) * (1 - sm(0.93, 1, s)); }
+  var items = [];
+  function draw(T) {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+    var ph = still ? 0.9 : T * 0.42;
+    var S = [[], []], i, k;
+    for (k = 0; k < 2; k++) for (i = 0; i <= N; i++) { var s = i / N; S[k].push(pt(s, 2 * Math.PI * TURNS * s + ph + k * Math.PI)); }
+    // 1. мягкое свечение вокруг нитей (позади всего)
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    for (k = 0; k < 2; k++) {
+      ctx.beginPath(); for (i = 0; i <= N; i++) { var p = S[k][i]; i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); }
+      ctx.strokeStyle = css(GLOW, 0.07); ctx.lineWidth = TW * 3.2; ctx.stroke();
+      ctx.strokeStyle = css(GLOW, 0.09); ctx.lineWidth = TW * 1.8; ctx.stroke();
+    }
+    // 2. отрезки нитей и перекладины, от дальних к ближним
+    items.length = 0;
+    for (k = 0; k < 2; k++) for (i = 0; i < N; i++) items.push({ t: 0, a: S[k][i], b: S[k][i + 1], z: (S[k][i][2] + S[k][i + 1][2]) / 2, s: (i + 0.5) / N });
+    for (var j = 0; j < RUNGS; j++) {
+      var sr = (j + 0.5) / RUNGS, th = 2 * Math.PI * TURNS * sr + ph, p1 = pt(sr, th), p2 = pt(sr, th + Math.PI);
+      items.push({ t: 1, a: p1, b: p2, z: (p1[2] + p2[2]) / 2 - 0.05, s: sr, j: j });
+    }
+    items.sort(function (u, v) { return u.z - v.z; });
+    for (var n = 0; n < items.length; n++) {
+      var it = items[n], d = (it.z + 1) / 2, e = fade(it.s);
+      if (e <= 0.01) continue;
+      if (it.t === 0) {
+        var w = TW * (0.78 + 0.44 * d);
+        var body = mix(BG, mix(FAR, NEAR, d), 0.25 + 0.75 * e);
+        ctx.lineCap = 'round'; ctx.strokeStyle = css(body); ctx.lineWidth = w;
+        ctx.beginPath(); ctx.moveTo(it.a[0], it.a[1]); ctx.lineTo(it.b[0], it.b[1]); ctx.stroke();
+        // внутренний синий свет и стеклянный блик
+        ctx.strokeStyle = css(mix(body, CYAN, 0.35 * d), 0.9); ctx.lineWidth = w * 0.5; ctx.stroke();
+        ctx.lineCap = 'butt'; ctx.strokeStyle = css(GLASS, (0.12 + 0.6 * d) * e); ctx.lineWidth = w * 0.18;
+        ctx.beginPath(); ctx.moveTo(it.a[0] - w * 0.16, it.a[1] - w * 0.2); ctx.lineTo(it.b[0] - w * 0.16, it.b[1] - w * 0.2); ctx.stroke();
+      } else {
+        var pulse = still ? 0.6 : 0.5 + 0.5 * Math.sin(T * 2.2 - it.j * 0.55);
+        var wr = TW * (0.36 + 0.18 * d);
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = css(GLOW, (0.10 + 0.16 * pulse) * e); ctx.lineWidth = wr * 3; ctx.beginPath(); ctx.moveTo(it.a[0], it.a[1]); ctx.lineTo(it.b[0], it.b[1]); ctx.stroke();
+        ctx.strokeStyle = css(mix(BG, mix(FAR, NEAR, d * 0.85), 0.3 + 0.7 * e)); ctx.lineWidth = wr; ctx.stroke();
+        var mx = (it.a[0] + it.b[0]) / 2, my = (it.a[1] + it.b[1]) / 2;
+        ctx.strokeStyle = css(mix(CYAN, [255, 255, 255], 0.35 * pulse), (0.35 + 0.55 * pulse) * (0.4 + 0.6 * d) * e); ctx.lineWidth = wr * 0.45;
+        ctx.beginPath(); ctx.moveTo(mx + (it.a[0] - mx) * 0.55, my + (it.a[1] - my) * 0.55); ctx.lineTo(mx + (it.b[0] - mx) * 0.55, my + (it.b[1] - my) * 0.55); ctx.stroke();
+      }
+    }
+    // 3. огоньки, которые бегут по ближней стороне нитей
+    var heads = still ? [0.35, 0.7] : [(T * 0.05) % 1, (T * 0.05 + 0.5) % 1];
+    for (var h = 0; h < heads.length; h++) {
+      var hs = heads[h]; var kk = h % 2, idx = Math.round(hs * N), hp = S[kk][idx];
+      if (!hp || hp[2] < 0) continue;
+      var fa = fade(hs) * (0.5 + 0.5 * hp[2]);
+      ctx.save(); ctx.shadowColor = css(CYAN, 1); ctx.shadowBlur = 24;
+      ctx.fillStyle = css([235, 248, 255], 0.9 * fa); ctx.beginPath(); ctx.arc(hp[0], hp[1], TW * 0.28, 0, 6.283); ctx.fill(); ctx.restore();
+    }
+  }
+  size();
+  if (still) draw(0);
+  else {
+    var t0 = performance.now(), vis = true;
+    document.addEventListener('visibilitychange', function () { vis = !document.hidden; });
+    (function loop(now) { if (vis) draw((now - t0) / 1000); requestAnimationFrame(loop); })(t0);
+  }
+  addEventListener('resize', function () { size(); if (still) draw(0); });
+  window.__dnaDraw = function (T) { size(); draw(T || 0); };
 })();
 </script>
 </body>

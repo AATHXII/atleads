@@ -1463,7 +1463,7 @@ html:not([data-js]) .hero__house{background:var(--house) center bottom / auto 10
 @keyframes houseIn{from{opacity:0;transform:translateX(-50%) translateY(24px)}to{opacity:1;transform:translateX(-50%)}}
 [data-shot]:not([data-capture]) .hero__house{animation:none}
 /* 26.11.2026: на телефоне башни внизу, под текстом затемнение */
-@media (max-width:760px){.hero__house::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,var(--bg) 0%,rgba(5,7,13,.6) 28%,transparent 46%)}.hero__stats,.hero__cta .btn-note{text-shadow:0 1px 3px #000,0 0 14px rgba(0,0,0,.95)}}
+@media (max-width:760px){.hero__house::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,var(--bg) 0%,rgba(5,7,13,.55) 20%,transparent 36%)}.hero__stats,.hero__cta .btn-note{text-shadow:0 1px 3px #000,0 0 14px rgba(0,0,0,.95)}}
 </style>
 </head>
 <body>
@@ -1511,7 +1511,7 @@ html:not([data-js]) .hero__house{background:var(--house) center bottom / auto 10
 
   <div class="container hero__content">
     <span class="pill"><span class="pill__dot"></span>Системный маркетинг в&nbsp;Meta, Google и&nbsp;TikTok</span>
-    <h1>Масштабируем продажи квартир <br class="br-d"><em>через стратегию, аналитику и&nbsp;трафик</em></h1>
+    <h1>Масштабируем продажи квартир <br class="br-d"><em>через стабильный поток заявок</em></h1>
     <div class="hero__stats">
       <span><b>от&nbsp;300</b> заявок в&nbsp;день</span>
       <span><b>$1,5+&nbsp;млн</b> рекламного бюджета</span>
@@ -1997,7 +1997,7 @@ html:not([data-js]) .hero__house{background:var(--house) center bottom / auto 10
     });
     var mnx = Math.min.apply(0, xs), mxx = Math.max.apply(0, xs), mny = Math.min.apply(0, ys), mxy = Math.max.apply(0, ys);
     var mob = W < 760;
-    S = Math.min(H * (mob ? 0.58 : 0.86) / (mxy - mny), W * (mob ? 0.72 : 0.36) / (mxx - mnx)); // 26.11.2026: на телефоне башни ниже кнопки
+    S = Math.min(H * (mob ? 0.74 : 0.86) / (mxy - mny), W * (mob ? 0.9 : 0.36) / (mxx - mnx)); // 26.11.2026: на телефоне башни ниже кнопки
     OX = W / 2 - S * (mnx + mxx) / 2; OY = H * 0.995 + S * mny;
   }
   function size() {
