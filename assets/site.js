@@ -3,7 +3,7 @@
 var SITE = {
   GA4_ID: 'G-ZRF220BEH6', // GA4: аккаунт «at leads», ресурс atleads.pro
   PIXEL_ID: '1711007687207002', // Meta Pixel «at leads site (atleads.pro)», бизнес Atai Project
-  WHATSAPP: '',      // номер только цифрами, например 996700000000
+  WHATSAPP: '996555525572', // номер только цифрами: после заявки кнопка «Перейти в WhatsApp»
   LEADS_URL: 'https://script.google.com/macros/s/AKfycby7v8TAu1KKwP-l9yCbSn2w6aFMQ8oh3Zg4FeasAY5yVMRxGPu_FlqTe-gwi8e3IQMX/exec' // Apps Script «leads»: Google Таблица + Telegram
 };
 
