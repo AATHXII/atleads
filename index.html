@@ -1460,6 +1460,13 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
 @media (prefers-reduced-motion:reduce){.vcase.rv .vcase__bar i{transform:none;transition:none}}
 @media (max-width:760px){.vcase__x{min-width:48px;height:48px;font-size:17px}.vcase__chart{max-width:none}}
 </style>
+<style>/* 26.11.2026: ссылки на все страницы в подвале (SEO, перелинковка) */
+.footer__niches{flex-basis:100%;display:flex;flex-wrap:wrap;gap:8px 22px;align-items:center;padding-top:18px;margin-top:4px;border-top:1px solid var(--line);font-size:14px}
+.footer__niches span{color:var(--dim)}
+.footer__niches a{color:var(--muted)}
+.footer__niches a:hover{color:var(--text)}
+@media (max-width:760px){.footer__niches{flex-direction:column;align-items:flex-start;gap:4px;width:100%;align-self:stretch}.footer__niches a{min-height:40px;display:inline-flex;align-items:center}}
+</style>
 </head>
 <body>
 
@@ -1486,7 +1493,7 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
 
   <nav class="nav">
     <div class="container nav__inner">
-      <a class="logo" href="#"><svg class="logo__mark logo__mark--krug" viewBox="0 0 512 512" aria-hidden="true"><circle cx="256" cy="256" r="256" fill="#05070D"/><g stroke="#1A44C2" stroke-width="58" stroke-linecap="round"><line x1="118.0" y1="256.0" x2="394.0" y2="256.0"/><line x1="158.4" y1="158.4" x2="353.6" y2="353.6"/><line x1="256.0" y1="118.0" x2="256.0" y2="394.0"/><line x1="353.6" y1="158.4" x2="158.4" y2="353.6"/></g><circle cx="256" cy="256" r="46" fill="#1A44C2"/></svg>at leads</a>
+      <a class="logo" href="/"><svg class="logo__mark logo__mark--krug" viewBox="0 0 512 512" aria-hidden="true"><circle cx="256" cy="256" r="256" fill="#05070D"/><g stroke="#1A44C2" stroke-width="58" stroke-linecap="round"><line x1="118.0" y1="256.0" x2="394.0" y2="256.0"/><line x1="158.4" y1="158.4" x2="353.6" y2="353.6"/><line x1="256.0" y1="118.0" x2="256.0" y2="394.0"/><line x1="353.6" y1="158.4" x2="158.4" y2="353.6"/></g><circle cx="256" cy="256" r="46" fill="#1A44C2"/></svg>at leads</a>
       <div class="nav__links">
         <a href="#numbers">Цифры</a>
         <a href="#formula">Формула роста</a>
@@ -1801,8 +1808,9 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
 
 <footer class="footer">
   <div class="container footer__inner">
-    <a class="logo" href="#" style="color:var(--text)"><svg class="logo__mark logo__mark--krug" viewBox="0 0 512 512" aria-hidden="true"><circle cx="256" cy="256" r="256" fill="#05070D"/><g stroke="#1A44C2" stroke-width="58" stroke-linecap="round"><line x1="118.0" y1="256.0" x2="394.0" y2="256.0"/><line x1="158.4" y1="158.4" x2="353.6" y2="353.6"/><line x1="256.0" y1="118.0" x2="256.0" y2="394.0"/><line x1="353.6" y1="158.4" x2="158.4" y2="353.6"/></g><circle cx="256" cy="256" r="46" fill="#1A44C2"/></svg>at leads</a>
+    <a class="logo" href="/" style="color:var(--text)"><svg class="logo__mark logo__mark--krug" viewBox="0 0 512 512" aria-hidden="true"><circle cx="256" cy="256" r="256" fill="#05070D"/><g stroke="#1A44C2" stroke-width="58" stroke-linecap="round"><line x1="118.0" y1="256.0" x2="394.0" y2="256.0"/><line x1="158.4" y1="158.4" x2="353.6" y2="353.6"/><line x1="256.0" y1="118.0" x2="256.0" y2="394.0"/><line x1="353.6" y1="158.4" x2="158.4" y2="353.6"/></g><circle cx="256" cy="256" r="46" fill="#1A44C2"/></svg>at leads</a>
     <div class="footer__links"><a href="#">Instagram</a><a href="#">YouTube</a><a href="#">Telegram</a><a href="privacy.html">Политика обработки данных</a></div>
+    <div class="footer__niches"><span>Направления:</span><a href="/">Системный маркетинг</a><a href="nedvizhimost.html">Маркетинг для застройщиков</a><a href="medicina.html">Маркетинг для медицинских клиник</a><a href="rf-target.html">Реклама в Meta Ads на Россию</a></div>
   </div>
 </footer>
 <dialog class="modal" id="lead-modal" aria-labelledby="modal-t">
