@@ -1065,7 +1065,9 @@ html:not([data-hero]) .hero__content { padding-top: 72px; padding-bottom: 0; }
   background: radial-gradient(ellipse 50% 50% at 50% 50%, var(--accent-glow), transparent 70%); opacity: .40; pointer-events: none; z-index: 1; filter: blur(20px); }
 .hero__globe { position: absolute; left: 50%; top: var(--gy); width: calc(var(--gd) * 1.4); aspect-ratio: 1;
   transform: translate(-50%, -50%); pointer-events: none; z-index: 1; animation: globeIn 2s cubic-bezier(.2,.7,.2,1) both .15s; }
-html:not([data-js]) .hero__globe { background: var(--globe) center / 100% 100% no-repeat; }
+[data-theme="blue"]  { --globe-arcs: url('assets/globe-arcs-blue.png'); }
+[data-theme="green"] { --globe-arcs: url('assets/globe-arcs-green.png'); }
+html:not([data-js]) .hero__globe { background: var(--globe-arcs) center / 100% 100% no-repeat, var(--globe) center / 100% 100% no-repeat; }
 .hero__globe canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 @keyframes globeIn { from { opacity: 0; transform: translate(-50%, -50%) scale(.92); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
 [data-shot]:not([data-capture]) .hero__globe { animation: none; }
@@ -1422,6 +1424,13 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
 .fit--single .card{max-width:860px}
 .stat--main .stat__v small{color:var(--on-fill-muted);-webkit-text-fill-color:var(--on-fill-muted)}
 @media (max-width:760px){.stats--two .stat{grid-column:1/-1}}
+/* 26.11.2026: «С кем мы работаем» на всю ширину, список в две колонки */
+.fit--single .card{max-width:none}
+@media (min-width:761px){.fit--single ul{grid-template-columns:1fr 1fr;column-gap:56px}.fit--single li{font-size:20px}}
+/* 26.11.2026: один блок форматов (РФ) на всю ширину */
+.sysx--single{grid-template-columns:minmax(0,1fr)}
+/* 26.11.2026: ровный текст первого экрана на телефоне */
+@media (max-width:760px){.hero .pill{text-align:center;justify-content:center;text-wrap:balance}.hero .pill__dot{margin-top:0;align-self:center}.hero h1{text-wrap:balance}}
 </style>
 </head>
 <body>
@@ -1469,7 +1478,7 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
 
   <div class="container hero__content">
     <span class="pill"><span class="pill__dot"></span>Реклама в&nbsp;Instagram и&nbsp;Facebook на&nbsp;аудиторию в&nbsp;России в&nbsp;2026 году</span>
-    <h1>Meta Ads: самый эффективный способ <br class="br-d"><em>найти клиентов в&nbsp;России в&nbsp;2026 году</em></h1>
+    <h1>Приводим клиентов через Meta Ads, <br class="br-d"><em>обходя блокировку в&nbsp;России в&nbsp;2026 году</em></h1>
     <div class="hero__stats">
       <span><b>600+&nbsp;млн&nbsp;₽</b> выручки клиентам</span>
       <span><b>120+&nbsp;млн&nbsp;₽</b> рекламного бюджета</span>
@@ -1517,19 +1526,6 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
   </div>
 </section>
 
-<!-- ============ 3б. Как мы работаем ============ -->
-<section class="section section--light sheet is-light how-sec" id="how">
-  <div class="container">
-    <div class="how how--solo">
-      <div class="how__head"><div><h2 class="h2">Как мы работаем</h2></div></div>
-      <div class="grid-how"><div class="card"><span class="idx">01</span><div><h3 class="h3">Рекламные аккаунты и&nbsp;пополнение</h3><p>Предоставляем аккаунты и&nbsp;сами пополняем их.</p></div></div><div class="card"><span class="idx">02</span><div><h3 class="h3">Сопровождение по&nbsp;таргету</h3><p>Тестируем аудитории и&nbsp;креативы.</p></div></div><div class="card"><span class="idx">03</span><div><h3 class="h3">Сквозная аналитика</h3><p>Цена клика, заявки и&nbsp;клиента по&nbsp;каждому объявлению.</p></div></div><div class="card"><span class="idx">04</span><div><h3 class="h3">Решения по цифрам</h3><p>Бюджет увеличиваем там, где реклама окупается.</p></div></div><div class="card is-fill"><span class="idx">05</span><div><h3 class="h3">Сильная компетенция</h3><p>Большие коммерческие проекты позволяют нанимать и&nbsp;привлекать топовых специалистов на&nbsp;рынке.</p></div></div></div>
-      <div class="center-cta">
-      <a class="btn btn--primary" href="#form">Записаться на разбор<svg><use href="#i-arrow"/></svg></a>
-    </div>
-    </div>
-  </div>
-</section>
-
 <!-- ============ 4. Формула ============ -->
 <section class="section section--light sheet is-light" id="formula">
   <div class="container">
@@ -1538,12 +1534,8 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
     </div>
     <div class="sketch-card">
       <span class="sketch-card__k">Формула 1 · Из чего складывается выручка</span>
-      <svg class="sk sk--d" viewBox="0 0 1000 490" role="img" aria-label="Выручка = заявки × конверсия × чек × покупки 1 000 × 10% × 50 000 ₽ × 1,2 = 6 000 000 ₽ каждое звено +20% 1 200 × 12% × 60 000 ₽ × 1,44 = 12 441 600 ₽ ×2,07 !! бюджет на рекламу НЕ меняли"><defs><filter id="skn9"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter></defs><text class="sk-ink" x="50" y="48" font-size="38" text-anchor="start">Выручка = заявки × конверсия × чек × покупки</text><path class="sk-acc-s" d="M48,63.5 L836,58.5" stroke-width="3.5" fill="none" stroke-linecap="round" filter="url(#skn9)"/><text class="sk-ink" x="50" y="119" font-size="38" text-anchor="start">1 000 × 10% × 50 000 ₽ × 1,2 = 6 000 000 ₽</text><text class="sk-red" x="58" y="174" font-size="34" text-anchor="start" transform="rotate(-2 58 174)">каждое звено +20%</text><text class="sk-ink" x="50" y="236" font-size="38" text-anchor="start">1 200 × 12% × 60 000 ₽ × 1,44 =</text><rect class="sk-hl" x="44" y="268" width="281" height="59" rx="8" transform="rotate(-1.5 180 296)" filter="url(#skn9)"/><text class="sk-ink" x="56" y="310" font-size="46" text-anchor="start">12 441 600 ₽</text><text class="sk-red" x="58" y="404" font-size="58" text-anchor="start" transform="rotate(-5 58 404)">×2,07 !!</text><path class="sk-red-s" d="M58,418 L276,410" stroke-width="3.5" fill="none" stroke-linecap="round" filter="url(#skn9)"/><text class="sk-ink" x="50" y="461" font-size="30" text-anchor="start">бюджет на рекламу НЕ меняли</text></svg>
-      <svg class="sk sk--m" viewBox="0 0 360 540" role="img" aria-label="Выручка = заявки × конверсия × чек × покупки 1 000 × 10% × 50 000 ₽ × 1,2 = 6 000 000 ₽ каждое звено +20% 1 200 × 12% × 60 000 ₽ × 1,44 = 12 441 600 ₽ ×2,07 !! бюджет на рекламу НЕ меняли"><defs><filter id="skn10"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter></defs><text class="sk-ink" x="20" y="42" font-size="34" text-anchor="start">Выручка =</text><text class="sk-ink" x="20" y="91" font-size="30" text-anchor="start">заявки × конверсия</text><text class="sk-ink" x="20" y="140" font-size="30" text-anchor="start">× чек × покупки</text><path class="sk-acc-s" d="M18,155.7 L232,150.7" stroke-width="3.5" fill="none" stroke-linecap="round" filter="url(#skn10)"/><text class="sk-ink" x="20" y="189" font-size="24" text-anchor="start">1 000 × 10% × 50 000 ₽ × 1,2</text><text class="sk-ink" x="20" y="240" font-size="32" text-anchor="start">= 6 000 000 ₽</text><text class="sk-red" x="28" y="283" font-size="26" text-anchor="start" transform="rotate(-2 28 283)">каждое звено +20%</text><text class="sk-ink" x="20" y="321" font-size="24" text-anchor="start">1 200 × 12% × 60 000 ₽ × 1,44</text><rect class="sk-hl" x="14" y="345" width="246" height="44" rx="8" transform="rotate(-1.5 132 366)" filter="url(#skn10)"/><text class="sk-ink" x="26" y="376" font-size="34" text-anchor="start">= 12 441 600 ₽</text><text class="sk-red" x="28" y="464" font-size="54" text-anchor="start" transform="rotate(-5 28 464)">×2,07 !!</text><path class="sk-red-s" d="M28,478 L231,470" stroke-width="3.5" fill="none" stroke-linecap="round" filter="url(#skn10)"/><text class="sk-ink" x="20" y="511" font-size="24" text-anchor="start">бюджет на рекламу НЕ меняли</text></svg>
-    </div>
-    <div class="formulas-2 formulas-2--sk">
-      <div class="sketch-card sketch-card--s"><span class="sketch-card__k">Формула 2 · Сколько можно платить за клиента</span><svg class="sk" viewBox="0 0 560 312" role="img" aria-label="Допустимая цена клиента = чек × покупки × маржа 50 000 ₽ × 1,2 × 50% = 30 000 ₽ клиент дешевле? бюджет растёт"><defs><filter id="skn11"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter></defs><text class="sk-ink" x="16" y="42" font-size="34" text-anchor="start">Допустимая цена клиента =</text><text class="sk-ink" x="16" y="98" font-size="34" text-anchor="start">чек × покупки × маржа</text><path class="sk-acc-s" d="M14,113.58000000000001 L352,108.58000000000001" stroke-width="3.5" fill="none" stroke-linecap="round" filter="url(#skn11)"/><text class="sk-ink" x="16" y="163" font-size="34" text-anchor="start">50 000 ₽ × 1,2 × 50% =</text><rect class="sk-hl" x="10" y="193" width="187" height="56" rx="8" transform="rotate(-1.5 99 221)" filter="url(#skn11)"/><text class="sk-ink" x="22" y="234" font-size="44" text-anchor="start">30 000 ₽</text><text class="sk-red" x="24" y="283" font-size="30" text-anchor="start" transform="rotate(-2 24 283)">клиент дешевле? бюджет растёт</text></svg></div>
-      <div class="sketch-card sketch-card--s"><span class="sketch-card__k">Формула 3 · Окупается ли реклама</span><svg class="sk" viewBox="0 0 560 302" role="img" aria-label="ROMI = (выручка − расходы) ÷ расходы × 100% выручка 5 млн ₽, расходы 1 млн ₽ ROMI = 400% бюджет → в лучшие объявления"><defs><filter id="skn12"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter></defs><text class="sk-ink" x="16" y="45" font-size="36" text-anchor="start">ROMI =</text><text class="sk-ink" x="16" y="94" font-size="30" text-anchor="start">(выручка − расходы) ÷ расходы × 100%</text><path class="sk-acc-s" d="M14,109.6 L524,104.6" stroke-width="3.5" fill="none" stroke-linecap="round" filter="url(#skn12)"/><text class="sk-ink" x="16" y="152" font-size="30" text-anchor="start">выручка 5 млн ₽, расходы 1 млн ₽</text><rect class="sk-hl" x="10" y="183" width="249" height="56" rx="8" transform="rotate(-1.5 130 210)" filter="url(#skn12)"/><text class="sk-ink" x="22" y="223" font-size="44" text-anchor="start">ROMI = 400%</text><text class="sk-red" x="24" y="272" font-size="30" text-anchor="start" transform="rotate(-2 24 272)">бюджет → в лучшие объявления</text></svg></div>
+      <svg class="sk sk--d" viewBox="0 0 1000 490" role="img" aria-label="Выручка = заявки × конверсия × чек × покупки 1 000 × 10% × 50 000 ₽ × 1,2 = 6 000 000 ₽ каждое звено +20% 1 200 × 12% × 60 000 ₽ × 1,44 = 12 441 600 ₽ ×2,07 !! бюджет на рекламу НЕ меняли"><defs><filter id="skn5"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter></defs><text class="sk-ink" x="50" y="48" font-size="38" text-anchor="start">Выручка = заявки × конверсия × чек × покупки</text><path class="sk-acc-s" d="M48,63.5 L836,58.5" stroke-width="3.5" fill="none" stroke-linecap="round" filter="url(#skn5)"/><text class="sk-ink" x="50" y="119" font-size="38" text-anchor="start">1 000 × 10% × 50 000 ₽ × 1,2 = 6 000 000 ₽</text><text class="sk-red" x="58" y="174" font-size="34" text-anchor="start" transform="rotate(-2 58 174)">каждое звено +20%</text><text class="sk-ink" x="50" y="236" font-size="38" text-anchor="start">1 200 × 12% × 60 000 ₽ × 1,44 =</text><rect class="sk-hl" x="44" y="268" width="281" height="59" rx="8" transform="rotate(-1.5 180 296)" filter="url(#skn5)"/><text class="sk-ink" x="56" y="310" font-size="46" text-anchor="start">12 441 600 ₽</text><text class="sk-red" x="58" y="404" font-size="58" text-anchor="start" transform="rotate(-5 58 404)">×2,07 !!</text><path class="sk-red-s" d="M58,418 L276,410" stroke-width="3.5" fill="none" stroke-linecap="round" filter="url(#skn5)"/><text class="sk-ink" x="50" y="461" font-size="30" text-anchor="start">бюджет на рекламу НЕ меняли</text></svg>
+      <svg class="sk sk--m" viewBox="0 0 360 540" role="img" aria-label="Выручка = заявки × конверсия × чек × покупки 1 000 × 10% × 50 000 ₽ × 1,2 = 6 000 000 ₽ каждое звено +20% 1 200 × 12% × 60 000 ₽ × 1,44 = 12 441 600 ₽ ×2,07 !! бюджет на рекламу НЕ меняли"><defs><filter id="skn6"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter></defs><text class="sk-ink" x="20" y="42" font-size="34" text-anchor="start">Выручка =</text><text class="sk-ink" x="20" y="91" font-size="30" text-anchor="start">заявки × конверсия</text><text class="sk-ink" x="20" y="140" font-size="30" text-anchor="start">× чек × покупки</text><path class="sk-acc-s" d="M18,155.7 L232,150.7" stroke-width="3.5" fill="none" stroke-linecap="round" filter="url(#skn6)"/><text class="sk-ink" x="20" y="189" font-size="24" text-anchor="start">1 000 × 10% × 50 000 ₽ × 1,2</text><text class="sk-ink" x="20" y="240" font-size="32" text-anchor="start">= 6 000 000 ₽</text><text class="sk-red" x="28" y="283" font-size="26" text-anchor="start" transform="rotate(-2 28 283)">каждое звено +20%</text><text class="sk-ink" x="20" y="321" font-size="24" text-anchor="start">1 200 × 12% × 60 000 ₽ × 1,44</text><rect class="sk-hl" x="14" y="345" width="246" height="44" rx="8" transform="rotate(-1.5 132 366)" filter="url(#skn6)"/><text class="sk-ink" x="26" y="376" font-size="34" text-anchor="start">= 12 441 600 ₽</text><text class="sk-red" x="28" y="464" font-size="54" text-anchor="start" transform="rotate(-5 28 464)">×2,07 !!</text><path class="sk-red-s" d="M28,478 L231,470" stroke-width="3.5" fill="none" stroke-linecap="round" filter="url(#skn6)"/><text class="sk-ink" x="20" y="511" font-size="24" text-anchor="start">бюджет на рекламу НЕ меняли</text></svg>
     </div>
 
     <div class="center-cta" style="margin-top:32px">
@@ -1577,7 +1569,7 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
 <!-- ============ 5б. Формат работы ============ -->
 <section class="section section--light sheet is-light format-sec" id="format">
   <div class="container">
-    <div class="sysx">
+    <div class="sysx sysx--single">
       
       <div class="sysx__card"><span class="label">Два формата работы</span><div class="sysx__fmts"><div class="sysx__fmt"><span class="badge">01</span><div><h3 class="h3">Полный цикл</h3><p>Аккаунты, пополнение, запуск и&nbsp;сопровождение по&nbsp;таргету.</p></div></div><div class="sysx__fmt"><span class="badge">02</span><div><h3 class="h3">Только запуск</h3><p>Аккаунты, пополнение и&nbsp;запуск рекламы. Сопровождение по&nbsp;таргету входит только в&nbsp;полный цикл.</p></div></div></div></div>
     </div>
@@ -1611,7 +1603,7 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
           <li><i class="ok"><svg><use href="#i-check"/></svg></i><span>План роста на 90&nbsp;дней</span></li>
         </ul>
         <div class="oa__bonus">
-          <div class="oa__bonus-l"><span class="bonus__chip">Бонус до 10&nbsp;декабря</span><div class="bonus__price"><s>≈25&nbsp;000&nbsp;₽</s><span>аудит за&nbsp;0&nbsp;₽</span></div><p class="oa__bonus-t">Если на разборе видим, как помочь, проводим аудит воронки бесплатно.</p></div>
+          <div class="oa__bonus-l"><span class="bonus__chip">Бонус до 10&nbsp;декабря</span><div class="bonus__price"><s>25&nbsp;000&nbsp;₽</s><span>аудит за&nbsp;0&nbsp;₽</span></div><p class="oa__bonus-t">Если на разборе видим, как помочь, проводим аудит воронки бесплатно.</p></div>
           <div class="oa__bonus-r"><a class="btn btn--primary" href="#form">Записаться на разбор<svg><use href="#i-arrow"/></svg></a><p class="btn-note">Если не можем помочь, скажем об этом на созвоне.</p></div>
         </div>
       </div>
@@ -1828,7 +1820,7 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
     return { p: pts, ph: (k * 0.37) % 1, sp: (0.11 + (k % 4) * 0.025) * 1.2 };
   });
   var W = 0, dpr = 1, R = 0, C = 0, rot = -0.55, tilt = 0.22, col = {}, live = true, last = 0, t0 = 0;
-  var LOOP = 0; /* секунды петли: режим записи анимации для холста (window.__globeFrame) */
+  var LAYER = 0, LOOP = 0; /* секунды петли: режим записи анимации для холста (window.__globeFrame) */
   function rgb(h) { h = h.trim(); if (h[0] === '#') { if (h.length === 4) h = '#' + h[1]+h[1]+h[2]+h[2]+h[3]+h[3]; return [parseInt(h.substr(1,2),16), parseInt(h.substr(3,2),16), parseInt(h.substr(5,2),16)]; } var m = h.match(/[\d.]+/g); return m ? m.slice(0,3).map(Number) : [90,160,255]; }
   function colors() { var cs = getComputedStyle(document.documentElement); col.a = rgb(cs.getPropertyValue('--accent') || '#3d8bff'); col.b = rgb(cs.getPropertyValue('--accent-2') || '#5ee6ff'); }
   function rgba(c, a) { return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')'; }
@@ -1845,6 +1837,7 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
     ca = Math.cos(rot); sa = Math.sin(rot); ct = Math.cos(tilt); st = Math.sin(tilt);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, W);
     var A = col.a, B = col.b, WH = [255,255,255];
+    if (LAYER !== 2) {
     // атмосфера
     var g = ctx.createRadialGradient(C, C, R * .9, C, C, R * 1.22);
     g.addColorStop(0, rgba(A, 0)); g.addColorStop(.38, rgba(A, .27)); g.addColorStop(.55, rgba(B, .09)); g.addColorStop(1, rgba(A, 0));
@@ -1875,6 +1868,8 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
     // блик по краю
     ctx.strokeStyle = rgba(B, .5); ctx.lineWidth = 1.2; ctx.shadowColor = rgba(A, .81); ctx.shadowBlur = 16;
     ctx.beginPath(); ctx.arc(C, C, R, Math.PI * 1.02, Math.PI * 1.98); ctx.stroke(); ctx.shadowBlur = 0;
+    }
+    if (LAYER !== 1) {
     // дуги
     var T = now / 1000;
     ctx.lineCap = 'round';
@@ -1893,10 +1888,13 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
       // волна в точке прибытия
       if (pr >= 1 && pr < 1.4 && Q[L-1][3]) { var w = (pr - 1) / .4; ctx.strokeStyle = rgba(B, (1 - w) * .8); ctx.lineWidth = 1.2; ctx.beginPath(); ctx.ellipse(Q[L-1][0], Q[L-1][1], 3 + w * 18, (3 + w * 18) * Math.max(.3, Q[L-1][2]), 0, 0, 6.3); ctx.stroke(); }
     }
+    }
+    if (LAYER !== 2) {
     // города
     for (var cI = 0; cI < CITY.length; cI++) { var cc = CITY[cI]; proj(cc[0], cc[1], cc[2], P); if (P[2] <= .08) continue;
       ctx.fillStyle = rgba(B, .22 * P[2]); ctx.beginPath(); ctx.arc(P[0], P[1], 7 * P[2], 0, 6.3); ctx.fill();
       ctx.fillStyle = rgba(mix(B, WH, .6), .95); ctx.beginPath(); ctx.arc(P[0], P[1], 2.2, 0, 6.3); ctx.fill(); }
+  }
   }
   function frame(now) {
     if (!live) { last = 0; return; }
@@ -1906,7 +1904,7 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
   colors(); size(); host.classList.add('is-live');
   new MutationObserver(function () { colors(); if (still) draw(0); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   addEventListener('resize', function () { size(); if (still) draw(0); });
-  window.__globeFrame = function (t, loop, spin) { LOOP = loop; var r0 = rot; if (spin) rot = r0 + 2 * Math.PI * t / loop; draw(t * 1000); rot = r0; };
+  window.__globeFrame = function (t, loop, spin, layer) { LOOP = loop; LAYER = layer || 0; var r0 = rot; if (spin) rot = r0 + 2 * Math.PI * t / loop; draw(t * 1000); rot = r0; LAYER = 0; };
   if (still) { draw(0); return; }
   new IntersectionObserver(function (e) { var was = live; live = e[0].isIntersecting; if (live && !was) requestAnimationFrame(frame); }).observe(host);
   requestAnimationFrame(frame);
