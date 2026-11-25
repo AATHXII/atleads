@@ -1,0 +1,8 @@
+# Статичный сайт: сборки нет, публикуем корень репозитория.
+[build]
+  publish = "."
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
