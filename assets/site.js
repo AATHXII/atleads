@@ -1,7 +1,7 @@
 /* at leads: форма заявки, UTM-метки, GA4, Meta Pixel, анимации появления.
    Заполните ID ниже — пустая строка = выключено. */
 var SITE = {
-  GA4_ID: '',        // G-XXXXXXXXXX
+  GA4_ID: 'G-ZRF220BEH6', // GA4: аккаунт «at leads», ресурс atleads.pro
   PIXEL_ID: '1711007687207002', // Meta Pixel «at leads site (atleads.pro)», бизнес Atai Project
   WHATSAPP: '',      // номер только цифрами, например 996700000000
   LEADS_URL: ''      // URL веб-приложения Apps Script (Google Таблица + Telegram). Пусто = Netlify Forms
