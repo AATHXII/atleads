@@ -1429,6 +1429,11 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
 @media (min-width:761px){.fit--single ul{grid-template-columns:1fr 1fr;column-gap:56px}.fit--single li{font-size:20px}}
 /* 26.11.2026: один блок форматов (РФ) на всю ширину */
 .sysx--single{grid-template-columns:minmax(0,1fr)}
+/* 26.11.2026: ровные строки заголовка и на компьютере */
+.hero h1{text-wrap:balance}
+/* 26.11.2026: строка под заголовком первого экрана */
+.hero__sub{margin:20px auto 0;max-width:760px;font-size:22px;line-height:1.35;color:#fff;letter-spacing:-.01em}
+@media (max-width:760px){.hero__sub{font-size:17px;margin-top:14px}}
 /* 26.11.2026: ровный текст первого экрана на телефоне */
 @media (max-width:760px){.hero .pill{text-align:center;justify-content:center;text-wrap:balance}.hero .pill__dot{margin-top:0;align-self:center}.hero h1{text-wrap:balance}}
 </style>
