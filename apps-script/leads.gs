@@ -1,15 +1,13 @@
+/** @OnlyCurrentDoc */
 /**
  * at leads: приём заявок с сайта atleads.pro.
  * Пишет заявку строкой в лист «Заявки» и шлёт уведомление в Telegram.
  *
- * Настройка (один раз):
- * 1. Расширения → Apps Script, вставить этот код, сохранить.
- * 2. Настройки проекта → Свойства скрипта: TG_TOKEN = токен бота от @BotFather.
- * 3. Написать боту /start, затем запустить функцию setupTelegram — она найдёт chat id
- *    и пришлёт тестовое сообщение.
- * 4. Развернуть → Новое развертывание → Веб-приложение:
- *    «Запуск от имени: я», «Доступ: все». URL вставить в assets/site.js (LEADS_URL).
- * Токен в код и в репозиторий не вписывать.
+ * Развёртывания (веб-приложение, «Запуск от имени: я»):
+ * - «leads», доступ «Все» — URL в assets/site.js (LEADS_URL), сюда сайт шлёт заявки.
+ * - «setup», доступ «Только я» — страница подключения Telegram: владелец открывает её,
+ *   нажимает «Старт» у своего бота и вставляет токен от @BotFather.
+ * Токен хранится только в свойствах скрипта (TG_TOKEN), в код и в репозиторий не вписывать.
  */
 var SHEET_NAME = 'Заявки';
 var FIELDS = ['name', 'contact', 'sphere', 'role', 'request', 'budget', 'page', 'landing', 'referrer',
@@ -33,9 +31,40 @@ function doPost(e) {
   return json_({ ok: true });
 }
 
+// Страница настройки Telegram видна только владельцу скрипта (вошёл в свой Google).
 function doGet() {
-  return json_({ ok: true, service: 'at leads' });
+  if (!isOwner_()) return json_({ ok: true, service: 'at leads' });
+  return HtmlService.createHtmlOutput(SETUP_HTML)
+    .setTitle('at leads — подключение Telegram')
+    .addMetaTag('viewport', 'width=device-width, initial-scale=1');
 }
+
+function isOwner_() {
+  var a = Session.getActiveUser().getEmail();
+  return !!a && a === Session.getEffectiveUser().getEmail();
+}
+
+// Вызывается со страницы настройки: сохраняет токен, находит чат, шлёт тест.
+function saveTelegram(token) {
+  if (!isOwner_()) throw new Error('Нет доступа');
+  token = String(token || '').trim();
+  if (!/^\d+:[\w-]{30,}$/.test(token)) throw new Error('Это не похоже на токен бота от @BotFather');
+  PropertiesService.getScriptProperties().setProperty('TG_TOKEN', token);
+  setupTelegram();
+  return 'ok';
+}
+
+var SETUP_HTML =
+  '<div style="font:16px/1.5 system-ui,sans-serif;max-width:440px;margin:32px auto;padding:0 16px">' +
+  '<h2 style="margin:0 0 12px">Telegram для заявок at leads</h2>' +
+  '<ol style="padding-left:20px;margin:0 0 16px"><li>Откройте своего бота в Telegram и нажмите «Старт».</li>' +
+  '<li>Вставьте токен бота от @BotFather и нажмите «Подключить».</li></ol>' +
+  '<input id="t" placeholder="123456789:AA..." autocomplete="off" style="width:100%;box-sizing:border-box;padding:12px;font:inherit;border:1px solid #ccc;border-radius:10px">' +
+  '<button id="b" style="margin-top:12px;width:100%;padding:12px;font:inherit;border:0;border-radius:10px;background:#1A44C2;color:#fff">Подключить</button>' +
+  '<p id="s" style="margin-top:12px"></p></div>' +
+  '<script>document.getElementById("b").onclick=function(){var s=document.getElementById("s");s.textContent="Подключаю…";' +
+  'google.script.run.withSuccessHandler(function(){s.textContent="Готово: в Telegram пришло тестовое сообщение.";document.getElementById("t").value="";})' +
+  '.withFailureHandler(function(e){s.textContent="Ошибка: "+e.message;}).saveTelegram(document.getElementById("t").value);};</script>';
 
 function sheet_() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
