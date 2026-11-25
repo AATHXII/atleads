@@ -1,9 +1,10 @@
-/* at leads: форма заявки (Netlify Forms), UTM-метки, GA4 и Meta Pixel.
+/* at leads: форма заявки, UTM-метки, GA4, Meta Pixel, анимации появления.
    Заполните ID ниже — пустая строка = выключено. */
 var SITE = {
   GA4_ID: '',        // G-XXXXXXXXXX
-  PIXEL_ID: '',      // ID пикселя Meta
-  WHATSAPP: ''       // номер только цифрами, например 996700000000
+  PIXEL_ID: '1711007687207002', // Meta Pixel «at leads site (atleads.pro)», бизнес Atai Project
+  WHATSAPP: '',      // номер только цифрами, например 996700000000
+  LEADS_URL: ''      // URL веб-приложения Apps Script (Google Таблица + Telegram). Пусто = Netlify Forms
 };
 
 /* ---------- Аналитика ---------- */
@@ -75,11 +76,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     btn.disabled = true;
     if (err) err.hidden = true;
-    fetch('/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams(new FormData(form)).toString()
-    }).then(function (r) {
+    var body = new URLSearchParams(new FormData(form)).toString();
+    var send = SITE.LEADS_URL
+      // Apps Script: ответ непрозрачный (no-cors), поэтому успехом считаем доставку запроса.
+      ? fetch(SITE.LEADS_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body })
+          .then(function () { return { ok: true }; })
+      : fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body });
+    send.then(function (r) {
       if (!r.ok) throw new Error(r.status);
       form.querySelector('.form__body').hidden = true;
       done.hidden = false;
@@ -96,3 +99,88 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 });
+
+/* ---------- Анимации: появление при прокрутке, счётчики цифр ----------
+   Только opacity/transform, без библиотек. Без JS и при «уменьшить движение» всё видно сразу. */
+(function () {
+  var root = document.documentElement;
+  var q = new URLSearchParams(location.search);
+  if (q.has('shot') || q.has('capture')) return;
+  if (!('IntersectionObserver' in window)) return;
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var css = document.createElement('style');
+  css.textContent =
+    '.rv{opacity:0;transform:translateY(24px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1);transition-delay:var(--rv-d,0ms)}' +
+    '.rv.rv-in{opacity:1;transform:none}' +
+    '.btn svg{transition:transform .25s ease}.btn:hover svg{transform:translateX(3px)}' +
+    '.count{font-variant-numeric:tabular-nums}' +
+    '@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}.btn:hover svg{transform:none}}';
+  document.head.appendChild(css);
+
+  var REVEAL = 'section h2, .stat, .card, .sketch-card, .chart-card, .shift, .reels__viz, .sysx__card, .photo, .oa__bonus, details.qa';
+  var COUNT = '.stat__v, .case__num';
+
+  function init() {
+    if (reduce) return;
+    var vh = innerHeight;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('rv-in');
+        io.unobserve(e.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+
+    var seen = new Map();
+    document.querySelectorAll(REVEAL).forEach(function (el) {
+      if (el.closest('dialog, .hero, footer')) return;
+      if (el.getBoundingClientRect().top < vh) return;      // первый экран не трогаем: без мигания
+      var parent = el.parentElement, i = seen.get(parent) || 0;
+      seen.set(parent, i + 1);
+      el.style.setProperty('--rv-d', Math.min(i, 5) * 70 + 'ms');
+      el.classList.add('rv');
+      io.observe(el);
+    });
+
+    var cio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        cio.unobserve(e.target);
+        countUp(e.target);
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll(COUNT).forEach(function (el) {
+      if (el.getBoundingClientRect().top < vh) return;
+      if (numNode(el)) { el.classList.add('count'); cio.observe(el); }
+    });
+  }
+
+  // Первое число в элементе: «553», «7,5», «3 108 000» (пробелы и неразрывные пробелы между разрядами).
+  var NUM = /\d{1,3}(?:[  ]\d{3})+|\d+(?:,\d+)?/;
+  function numNode(el) {
+    var w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), n;
+    while ((n = w.nextNode())) if (NUM.test(n.nodeValue)) return n;
+    return null;
+  }
+  function countUp(el) {
+    var node = numNode(el); if (!node) return;
+    var src = node.nodeValue, m = src.match(NUM), raw = m[0];
+    var sep = (raw.match(/[  ]/) || [''])[0];
+    var dec = raw.indexOf(',') > -1 ? raw.split(',')[1].length : 0;
+    var target = parseFloat(raw.replace(/[  ]/g, '').replace(',', '.'));
+    var fmt = function (v) {
+      var s = v.toFixed(dec).replace('.', ',');
+      if (sep) s = s.replace(/\B(?=(\d{3})+(?!\d))/g, sep);
+      return src.slice(0, m.index) + s + src.slice(m.index + raw.length);
+    };
+    var t0 = performance.now(), dur = 1400;
+    (function tick(now) {
+      var k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+      node.nodeValue = k < 1 ? fmt(target * e) : src;
+      if (k < 1) requestAnimationFrame(tick);
+    })(t0);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
