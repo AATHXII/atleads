@@ -1417,6 +1417,14 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
   .about .socials { margin-top: 24px; }
 }
 </style>
+<style>/* 26.11.2026: заголовок первого экрана на телефоне ровными строками */
+@media (max-width:760px){
+  .hero h1{text-wrap:balance}
+  .hero h1 br.br-d{display:inline}
+  .hero h1 em{display:inline-block;text-wrap:balance}
+  html:not([data-hero]) .hero h1{font-size:clamp(27px,8.2vw,33px);line-height:1.04}
+}
+</style>
 </head>
 <body>
 
