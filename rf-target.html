@@ -1441,6 +1441,15 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
 .hero h1{text-wrap:balance}
 /* 26.11.2026: логотип Meta в заголовке РФ-таргета */
 .hero h1 .h1-meta{display:inline-block;width:.92em;height:.92em;vertical-align:-.1em;margin:0 .14em 0 .02em;filter:drop-shadow(0 0 22px rgba(0,130,251,.55))}
+/* 26.11.2026: график «Почему не Яндекс Директ и VK» */
+.cost-groups{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.bars--cg{height:250px;gap:14px;margin-top:24px}
+.bars--cg .bar__col{background:rgba(255,255,255,.16)}
+.bars--cg .bar--now .bar__col{background:linear-gradient(180deg,#ff6b6b,rgba(255,107,107,.35));box-shadow:0 0 40px -8px rgba(255,90,90,.6)}
+.bars--cg .bar__val{font-size:18px;color:#fff;white-space:nowrap}
+.cg__name{margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.1);font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.65)}
+.cg__name b{color:#ff8a8a;font-weight:600;margin-left:6px}
+@media (max-width:760px){.cost-groups{gap:18px}.bars--cg{height:210px;gap:8px}.bars--cg .bar__val{font-size:14px}.cg__name{font-size:10.5px}}
 /* 26.11.2026: строка под заголовком первого экрана */
 .hero__sub{margin:20px auto 0;max-width:760px;font-size:22px;line-height:1.35;color:#fff;letter-spacing:-.01em}
 @media (max-width:760px){.hero__sub{font-size:17px;margin-top:14px}}
@@ -1533,7 +1542,7 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
       <div class="market__text">
         <span class="label">Meta Ads в 2026 году</span>
         <h2 class="h2">В&nbsp;2026 году аудитория Instagram в&nbsp;России выросла</h2>
-        <div style="margin-top:28px"><p class="text">С&nbsp;марта 2022 года Meta закрыла рекламу на&nbsp;аудиторию в&nbsp;России. Аудитория при этом осталась.</p><p class="text" style="margin-top:16px">На&nbsp;российских площадках реклама дорожает: показы в&nbsp;VK Рекламе за&nbsp;год подорожали на&nbsp;33% и&nbsp;больше (click.ru).</p></div>
+        <div style="margin-top:28px"><p class="text">С&nbsp;марта 2022 года Meta закрыла рекламу на&nbsp;аудиторию в&nbsp;России. Аудитория при этом осталась.</p></div>
       </div>
       <div class="chart-card">
         <div class="glow-orb"></div>
@@ -1541,6 +1550,28 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
         <div class="chart-card__big">7,4&nbsp;млн<small>человек в&nbsp;день</small></div>
         <div class="chart-card__foot" style="margin-top:28px"><span class="tag">+19%</span>с&nbsp;января по&nbsp;май 2026 года, ГК «Родная речь»</div>
         <div class="chart-card__foot"><span class="tag">40%</span>россиян пользовались VPN весной 2026 года, Russian Field</div>
+      </div>
+    </div>
+    <div class="market" style="margin-top:88px">
+      <div class="market__text">
+        <span class="label">Яндекс Директ и VK</span>
+        <h3 class="h2">Почему не&nbsp;Яндекс Директ и&nbsp;VK</h3>
+        <div style="margin-top:28px"><p class="text">На&nbsp;российских площадках реклама быстро дорожает. За&nbsp;год тысяча показов в&nbsp;VK Рекламе подорожала на&nbsp;33%, в&nbsp;рекламной сети Яндекса на&nbsp;29%.</p></div>
+      </div>
+      <div class="chart-card cost-card">
+        <div class="glow-orb"></div>
+        <div class="chart-card__title">Тысяча показов, ₽ · 3 квартал</div>
+        <div class="cost-groups">
+          <div class="cg"><div class="bars bars--cg">
+            <div class="bar"><span class="bar__val">91,87&nbsp;₽</span><div class="bar__col" style="height:135px"></div><span class="bar__year">2025</span></div>
+            <div class="bar bar--now"><span class="bar__val">122,60&nbsp;₽</span><div class="bar__col" style="height:180px"></div><span class="bar__year">2026</span></div>
+          </div><div class="cg__name">VK Реклама <b>+33%</b></div></div>
+          <div class="cg"><div class="bars bars--cg">
+            <div class="bar"><span class="bar__val">88,51&nbsp;₽</span><div class="bar__col" style="height:130px"></div><span class="bar__year">2025</span></div>
+            <div class="bar bar--now"><span class="bar__val">114,33&nbsp;₽</span><div class="bar__col" style="height:168px"></div><span class="bar__year">2026</span></div>
+          </div><div class="cg__name">Яндекс, сети <b>+29%</b></div></div>
+        </div>
+        <div class="chart-card__foot">3 квартал 2026 к&nbsp;3 кварталу 2025, «Пульс click.ru»</div>
       </div>
     </div>
     <div class="card is-fill" style="margin-top:72px;padding:48px;border-radius:32px">

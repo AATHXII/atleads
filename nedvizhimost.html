@@ -1441,6 +1441,15 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
 .hero h1{text-wrap:balance}
 /* 26.11.2026: логотип Meta в заголовке РФ-таргета */
 .hero h1 .h1-meta{display:inline-block;width:.92em;height:.92em;vertical-align:-.1em;margin:0 .14em 0 .02em;filter:drop-shadow(0 0 22px rgba(0,130,251,.55))}
+/* 26.11.2026: график «Почему не Яндекс Директ и VK» */
+.cost-groups{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.bars--cg{height:250px;gap:14px;margin-top:24px}
+.bars--cg .bar__col{background:rgba(255,255,255,.16)}
+.bars--cg .bar--now .bar__col{background:linear-gradient(180deg,#ff6b6b,rgba(255,107,107,.35));box-shadow:0 0 40px -8px rgba(255,90,90,.6)}
+.bars--cg .bar__val{font-size:18px;color:#fff;white-space:nowrap}
+.cg__name{margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.1);font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.65)}
+.cg__name b{color:#ff8a8a;font-weight:600;margin-left:6px}
+@media (max-width:760px){.cost-groups{gap:18px}.bars--cg{height:210px;gap:8px}.bars--cg .bar__val{font-size:14px}.cg__name{font-size:10.5px}}
 /* 26.11.2026: строка под заголовком первого экрана */
 .hero__sub{margin:20px auto 0;max-width:760px;font-size:22px;line-height:1.35;color:#fff;letter-spacing:-.01em}
 @media (max-width:760px){.hero__sub{font-size:17px;margin-top:14px}}
