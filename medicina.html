@@ -1432,15 +1432,19 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
 /* 26.11.2026: ровный текст первого экрана на телефоне */
 @media (max-width:760px){.hero .pill{text-align:center;justify-content:center;text-wrap:balance}.hero .pill__dot{margin-top:0;align-self:center}.hero h1{text-wrap:balance}}
 </style>
-<style>/* спираль ДНК на первом экране */
-.hero__dna{position:absolute;inset:0;pointer-events:none;z-index:1;animation:dnaIn 1.8s cubic-bezier(.2,.7,.2,1) both .1s}
-.hero__dna canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-html:not([data-js]) .hero__dna{background:var(--dna) center / cover no-repeat}
-[data-theme="blue"]{--dna:url('assets/dna-blue.webp')}
-[data-theme="green"]{--dna:url('assets/dna-green.webp')}
-@media (max-width:760px){[data-theme="blue"]{--dna:url('assets/dna-blue-m.webp')}[data-theme="green"]{--dna:url('assets/dna-green-m.webp')}}
+<style>/* 26.11.2026: первый экран «Медицины» — фото ДНК (вариант C, выбор Атая; картинки сгенерированы в ChatGPT) */
+.hero__dnaph{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden;animation:dnaIn 1.6s ease both .1s}
+.hero__dnaph::before{content:"";position:absolute;top:0;bottom:0;right:0;left:16%;background:url('assets/dna-photo.webp') right center / cover no-repeat;-webkit-mask-image:linear-gradient(90deg,transparent,#000 22%);mask-image:linear-gradient(90deg,transparent,#000 22%);transform-origin:70% 40%;animation:dnaDrift 26s ease-in-out infinite alternate}
+.hero__dnaph::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 50% 40% at 50% 54%, rgba(5,7,13,.9), rgba(5,7,13,.35) 60%, rgba(5,7,13,0) 85%), linear-gradient(180deg, transparent 70%, var(--bg) 100%)}
 @keyframes dnaIn{from{opacity:0}to{opacity:1}}
-[data-shot]:not([data-capture]) .hero__dna{animation:none}
+@keyframes dnaDrift{from{transform:scale(1)}to{transform:scale(1.07) translateY(-1%)}}
+@media (max-width:760px){
+  .hero__dnaph::before{left:0;-webkit-mask-image:none;mask-image:none;background:url('assets/dna-photo-m.webp') center top / 100% auto no-repeat}
+  .hero__dnaph::after{background:linear-gradient(180deg, transparent 0, transparent 34%, var(--bg) 58%)}
+  html:not([data-hero]) .hero .hero__content{padding-top:250px !important;padding-bottom:40px !important}
+}
+@media (prefers-reduced-motion:reduce){.hero__dnaph::before{animation:none}}
+[data-shot]:not([data-capture]) .hero__dnaph,[data-shot]:not([data-capture]) .hero__dnaph::before{animation:none}
 </style>
 </head>
 <body>
@@ -1463,7 +1467,7 @@ html:not([data-js]) .hero__dna{background:var(--dna) center / cover no-repeat}
   <div class="hero__aurora" aria-hidden="true"><span class="a1"></span><span class="a2"></span><span class="a3"></span><span class="a4"></span></div>
   <div class="hero__horizon" aria-hidden="true"></div>
   <div class="hero__glow" aria-hidden="true"></div>
-  <div class="hero__dna" aria-hidden="true"><canvas></canvas></div>
+  <div class="hero__dnaph" aria-hidden="true"></div>
   <div class="hero__scrim" aria-hidden="true"></div>
 
   <nav class="nav">
@@ -1927,95 +1931,6 @@ html:not([data-js]) .hero__dna{background:var(--dna) center / cover no-repeat}
   if (still) { draw(0); return; }
   new IntersectionObserver(function (e) { var was = live; live = e[0].isIntersecting; if (live && !was) requestAnimationFrame(frame); }).observe(host);
   requestAnimationFrame(frame);
-})();
-</script>
-<script>
-/* Цифровая спираль ДНК (страница «Медицина», 2026-11-22): две нити из точек вращаются, по ним бегут огоньки. Canvas 2D, без библиотек. */
-(function () {
-  var host = document.querySelector('.hero__dna'); if (!host) return;
-  var cv = host.querySelector('canvas'), ctx = cv.getContext('2d');
-  var q = new URLSearchParams(location.search);
-  var still = !q.has('capture') && (q.has('shot') || matchMedia('(prefers-reduced-motion: reduce)').matches);
-  var W = 0, H = 0, dpr = 1, col = {};
-  function rgb(h) { h = (h || '').trim(); if (h[0] === '#') { if (h.length === 4) h = '#' + h[1]+h[1]+h[2]+h[2]+h[3]+h[3]; return [parseInt(h.substr(1,2),16), parseInt(h.substr(3,2),16), parseInt(h.substr(5,2),16)]; } var m = h.match(/[\d.]+/g); return m ? m.slice(0,3).map(Number) : [90,160,255]; }
-  function colors() { var cs = getComputedStyle(document.documentElement); col.a = rgb(cs.getPropertyValue('--accent') || '#3d8bff'); col.b = rgb(cs.getPropertyValue('--accent-2') || '#5ee6ff'); }
-  function rgba(c, a) { return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')'; }
-  function mix(a, b, t) { return [Math.round(a[0]+(b[0]-a[0])*t), Math.round(a[1]+(b[1]-a[1])*t), Math.round(a[2]+(b[2]-a[2])*t)]; }
-  var seed = 1122; function rnd() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
-  var N = 180, TURNS = 3.2, P0 = [0, 0], P1 = [0, 0], ax = 0, ay = 0, L = 1, nx = 0, ny = 0, R = 100, mob = false;
-  var DUST = []; for (var d = 0; d < 110; d++) DUST.push({ s: rnd(), o: (rnd() * 2 - 1), z: rnd(), v: .004 + rnd() * .01, ph: rnd() * 6.28 });
-  var HEADS = [{ s: .18, v: .05, k: 0 }, { s: .52, v: .038, k: 1 }, { s: .8, v: .046, k: 0 }];
-  function size() {
-    var r = host.getBoundingClientRect(); dpr = Math.min(2, window.devicePixelRatio || 1);
-    if (q.has('dna-dpr')) dpr = +q.get('dna-dpr');
-    W = Math.round(r.width); H = Math.round(r.height); cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
-    mob = W < 760;
-    // 26.11.2026: на телефоне спираль идёт над текстом, а не через него
-    P0 = mob ? [-0.15 * W, 0.37 * H] : [-0.05 * W, 0.97 * H];
-    P1 = mob ? [1.15 * W, 0.05 * H] : [1.05 * W, 0.05 * H];
-    ax = P1[0] - P0[0]; ay = P1[1] - P0[1]; L = Math.hypot(ax, ay); nx = -ay / L; ny = ax / L;
-    R = mob ? Math.min(0.12 * W, 48) : Math.min(0.12 * H, 118);
-  }
-  // приглушаем спираль под текстом, чтобы он читался
-  function att(x, y) { var dx = (x - W / 2) / (W * (mob ? .46 : .3)), dy = (y - H * (mob ? .46 : .5)) / (H * (mob ? .3 : .27)), dd = Math.sqrt(dx * dx + dy * dy); return Math.max(.28, Math.min(1, .28 + .72 * (dd - .55) / .9)); }
-  function pt(s, th) { var c = Math.cos(th); return [P0[0] + ax * s + nx * R * c, P0[1] + ay * s + ny * R * c, Math.sin(th)]; }
-  function th(s, ph) { return 2 * Math.PI * TURNS * s + ph; }
-  function draw(T, dt) {
-    var A = col.a, B = col.b, WH = [255, 255, 255];
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
-    var ph = still ? .9 : T * .32;
-    // мягкое свечение вдоль оси
-    ctx.lineCap = 'round';
-    [[R * 3.2, .05], [R * 1.7, .06]].forEach(function (w) { ctx.strokeStyle = rgba(A, w[1]); ctx.lineWidth = w[0]; ctx.beginPath(); ctx.moveTo(P0[0], P0[1]); ctx.lineTo(P1[0], P1[1]); ctx.stroke(); });
-    // пыль вокруг спирали
-    for (var i = 0; i < DUST.length; i++) {
-      var du = DUST[i]; if (!still) du.s = (du.s + du.v * dt * .25) % 1;
-      var off = du.o * R * 2.4 + (still ? 0 : Math.sin(T * .6 + du.ph) * 6), x = P0[0] + ax * du.s + nx * off, y = P0[1] + ay * du.s + ny * off;
-      ctx.fillStyle = rgba(mix(B, WH, .3), (.08 + .2 * du.z) * att(x, y)); ctx.fillRect(x, y, 1.3, 1.3);
-    }
-    var S1 = [], S2 = [];
-    for (i = 0; i < N; i++) { var s = i / (N - 1), t = th(s, ph); S1.push(pt(s, t)); S2.push(pt(s, t + Math.PI)); }
-    for (var pass = 0; pass < 2; pass++) {
-      // перемычки (пары оснований)
-      for (i = 1; i < N - 1; i += 3) {
-        var a = S1[i], b = S2[i], zm = (a[2] + b[2]) / 2; if ((zm < 0) !== (pass === 0)) continue;
-        var at = att((a[0] + b[0]) / 2, (a[1] + b[1]) / 2), al = (.07 + .26 * (zm + 1) / 2) * at;
-        var lg = ctx.createLinearGradient(a[0], a[1], b[0], b[1]); lg.addColorStop(0, rgba(B, al)); lg.addColorStop(.5, rgba(mix(B, WH, .3), al * .6)); lg.addColorStop(1, rgba(A, al));
-        ctx.strokeStyle = lg; ctx.lineWidth = 1.1; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
-        for (var k = 1; k <= 2; k++) { var f = k / 3, px = a[0] + (b[0] - a[0]) * f, py = a[1] + (b[1] - a[1]) * f; ctx.fillStyle = rgba(mix(k === 1 ? B : A, WH, .2), al * 1.4); ctx.beginPath(); ctx.arc(px, py, .9 + .8 * (zm + 1) / 2, 0, 6.283); ctx.fill(); }
-      }
-      // нити
-      for (var si = 0; si < 2; si++) {
-        var arr = si ? S2 : S1, c0 = si ? A : B;
-        for (i = 0; i < N; i++) {
-          var p = arr[i]; if ((p[2] < 0) !== (pass === 0)) continue;
-          var dz = (p[2] + 1) / 2, a2 = att(p[0], p[1]), r0 = 1 + 2.4 * dz, cc = mix(c0, WH, dz * .5);
-          if (dz > .62) { ctx.fillStyle = rgba(c0, .1 * a2); ctx.beginPath(); ctx.arc(p[0], p[1], r0 * 3.4, 0, 6.283); ctx.fill(); }
-          ctx.fillStyle = rgba(cc, (.22 + .78 * dz) * a2); ctx.beginPath(); ctx.arc(p[0], p[1], r0, 0, 6.283); ctx.fill();
-        }
-      }
-    }
-    // огоньки, которые бегут по нитям
-    for (var h = 0; h < HEADS.length; h++) {
-      var hd = HEADS[h]; if (!still) hd.s = (hd.s + hd.v * dt) % 1.15;
-      if (hd.s > 1) continue;
-      for (var tl = 16; tl >= 0; tl--) {
-        var ss = hd.s - tl * .0045; if (ss < 0) continue;
-        var q2 = pt(ss, th(ss, ph) + (hd.k ? Math.PI : 0)), dzz = (q2[2] + 1) / 2, fa = (1 - tl / 17) * (.35 + .65 * dzz) * att(q2[0], q2[1]);
-        ctx.fillStyle = rgba(mix(B, WH, .6), fa); ctx.beginPath(); ctx.arc(q2[0], q2[1], 1.2 + 2 * (1 - tl / 17), 0, 6.283); ctx.fill();
-        if (tl === 0) { ctx.fillStyle = '#fff'; ctx.shadowColor = rgba(B, 1); ctx.shadowBlur = 16; ctx.beginPath(); ctx.arc(q2[0], q2[1], 2.6, 0, 6.283); ctx.fill(); ctx.shadowBlur = 0; }
-      }
-    }
-  }
-  colors(); size();
-  if (still) draw(0, 0);
-  else {
-    var t0 = performance.now(), last = 0;
-    (function loop(now) { var T = (now - t0) / 1000, dt = Math.min(.1, T - last); last = T; draw(T, dt); requestAnimationFrame(loop); })(t0);
-  }
-  addEventListener('resize', function () { size(); if (still) draw(0, 0); });
-  new MutationObserver(function () { colors(); if (still) draw(0, 0); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-  window.__dnaDraw = function () { colors(); size(); draw(0, 0); };
 })();
 </script>
 </body>
