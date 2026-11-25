@@ -1450,6 +1450,9 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
 .cg__name{margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.1);font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.65)}
 .cg__name b{color:#ff8a8a;font-weight:600;margin-left:6px}
 @media (max-width:760px){.cost-groups{gap:18px}.bars--cg{height:210px;gap:8px}.bars--cg .bar__val{font-size:14px}.cg__name{font-size:10.5px}}
+.cases--4 .case__who{min-height:2.4em}
+.cases-note{margin-top:22px;font-size:17px;color:var(--light-muted,#4a5568)}
+.chart-card__big.reach-big small{display:block;margin:12px 0 0;font-size:17px}
 /* 26.11.2026: строка под заголовком первого экрана */
 .hero__sub{margin:20px auto 0;max-width:760px;font-size:22px;line-height:1.35;color:#fff;letter-spacing:-.01em}
 @media (max-width:760px){.hero__sub{font-size:17px;margin-top:14px}}
@@ -1590,11 +1593,12 @@ html:not([data-js]) .hero__dna{background:url('assets/dna-photo.webp') right cen
       <h3 class="h2" style="font-size:clamp(30px,3.4vw,48px)">Наши кейсы в&nbsp;медицине</h3>
     </div>
     <div class="cases cases--4">
-      <div class="card case"><span class="case__kind">Кейс</span><h3 class="case__who">Стоматологические клиники</h3></div>
-      <div class="card case"><span class="case__kind">Кейс</span><h3 class="case__who">Хирург, который делает ринопластику</h3></div>
-      <div class="card case"><span class="case__kind">Кейс</span><h3 class="case__who">Восстановительная клиника</h3></div>
-      <div class="card case is-fill"><span class="case__kind">Кейс</span><h3 class="case__who">Эстетическая клиника</h3></div>
+      <div class="card case"><span class="case__kind">Стоматология</span><h3 class="case__who">Стоматологические клиники</h3><div class="case__num">350<small>целевых заявок в&nbsp;день</small></div><div class="case__romi"><span>ROMI</span><b>637%</b></div></div>
+      <div class="card case"><span class="case__kind">Хирургия</span><h3 class="case__who">Хирург, который делает ринопластику</h3><div class="case__num">от&nbsp;500<small>заявок в&nbsp;день</small></div><div class="case__romi"><span>ROMI</span><b>505%</b></div></div>
+      <div class="card case"><span class="case__kind">Восстановление</span><h3 class="case__who">Восстановительная клиника</h3><div class="case__num">400<small>заявок в&nbsp;день</small></div><div class="case__romi"><span>ROMI</span><b>733%</b></div></div>
+      <div class="card case"><span class="case__kind">Эстетика</span><h3 class="case__who">Эстетическая клиника</h3><div class="case__num">от&nbsp;700<small>заявок в&nbsp;день</small></div></div>
     </div>
+    <p class="lead cases-note">Во&nbsp;всех проектах рост в&nbsp;2–3 раза от&nbsp;точки&nbsp;А.</p>
     <div class="center-cta" style="margin-top:32px">
       <a class="btn btn--primary" href="#form">Записаться на разбор<svg><use href="#i-arrow"/></svg></a>
     </div>
