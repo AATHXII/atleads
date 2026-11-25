@@ -2,10 +2,6 @@
 [build]
   publish = "."
 
-[[headers]]
-  for = "/assets/*"
-  [headers.values]
-    Cache-Control = "public, max-age=604800"
 
 # Исходник Apps Script лежит в репозитории для истории, но на сайте не отдаётся.
 [[redirects]]
