@@ -1458,6 +1458,29 @@ html:not([data-hero]) .hero { min-height: clamp(880px, 100svh, 1080px) !importan
 .case__ab b{font-size:17px;font-weight:600;color:var(--text);margin-right:2px}
 .case__ab i{font-style:normal;color:var(--accent);margin:0 2px}
 .case__ab em{flex-basis:100%;font-style:normal;font-weight:700;color:var(--accent);font-size:15px;margin-top:2px}
+.mcases .mcase{position:relative;overflow:hidden;transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s}
+.mcases .mcase::before{content:"";position:absolute;right:-60px;top:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--accent) 22%,transparent),transparent 70%);pointer-events:none}
+@media (hover:hover){.mcases .mcase:hover{transform:translateY(-6px);box-shadow:0 30px 60px -30px color-mix(in srgb,var(--accent) 55%,transparent)}}
+.mcase__top{display:flex;align-items:center;justify-content:space-between;position:relative}
+.mcase__x{display:grid;place-items:center;width:54px;height:54px;border-radius:50%;background:linear-gradient(140deg,var(--accent-2,#5ee6ff),var(--accent));color:#fff;font-weight:700;font-size:19px;letter-spacing:-.02em;box-shadow:0 10px 30px -8px var(--accent-glow,rgba(61,139,255,.6))}
+.mcases .case__who{min-height:2.4em}
+.mcase__chart{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:end;height:172px;margin-top:18px}
+.mcase__arc{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.mcase__arc path{fill:none;stroke:var(--accent);stroke-width:2;stroke-dasharray:5 5;vector-effect:non-scaling-stroke;opacity:.7}
+.mcase__bar{position:relative;display:flex;flex-direction:column;justify-content:flex-end;align-items:stretch;text-align:center}
+.mcase__bar i{display:block;border-radius:12px 12px 6px 6px}
+.mcase__bar b{font-size:18px;font-weight:600;letter-spacing:-.03em;margin-bottom:6px;color:var(--text)}
+.mcase__bar span{margin-top:8px;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.mcase__bar--a i{background:repeating-linear-gradient(135deg,rgba(11,16,32,.08) 0 6px,rgba(11,16,32,.04) 6px 12px);box-shadow:0 0 0 1px rgba(11,16,32,.08) inset}
+.mcase__bar--a b{color:var(--muted)}
+.mcase__bar--b i{background:linear-gradient(180deg,var(--accent-2,#5ee6ff),var(--accent));box-shadow:0 18px 40px -14px var(--accent-glow,rgba(61,139,255,.7))}
+.mcase__bar--b b{font-size:24px;color:var(--accent)}
+.mcase__cap{margin-top:12px;font-size:14px;color:var(--muted);text-align:center}
+.mcases .case__romi{margin-top:18px}
+@media (max-width:760px){.mcase__x{width:48px;height:48px;font-size:17px}}
+.mcase.rv .mcase__bar i{transform:scaleY(.04);transform-origin:50% 100%;transition:transform 1.1s cubic-bezier(.2,.7,.2,1) .35s}.mcase.rv .mcase__bar--b i{transition-delay:.6s}.mcase.rv-in .mcase__bar i{transform:none}
+.mcase.rv .mcase__arc path{stroke-dashoffset:60;transition:stroke-dashoffset 1.4s ease .9s}.mcase.rv-in .mcase__arc path{stroke-dashoffset:0}
+@media (prefers-reduced-motion:reduce){.mcase.rv .mcase__bar i{transform:none;transition:none}}
 /* 26.11.2026: строка под заголовком первого экрана */
 .hero__sub{margin:20px auto 0;max-width:760px;font-size:22px;line-height:1.35;color:#fff;letter-spacing:-.01em}
 @media (max-width:760px){.hero__sub{font-size:17px;margin-top:14px}}
