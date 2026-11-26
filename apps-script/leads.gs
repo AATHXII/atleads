@@ -9,7 +9,7 @@
  *   нажимает «Старт» у своего бота и вставляет токен от @BotFather.
  * Токен хранится только в свойствах скрипта (TG_TOKEN), в код и в репозиторий не вписывать.
  * Conversions API (26.11.2026): заявка уходит в Meta с сервера в пиксель своей страницы.
- * Ключ доступа Meta — только в свойствах скрипта (CAPI_TOKEN), вводит владелец на странице «setup».
+ * Ключи доступа Meta — только в свойствах скрипта (CAPI_TOKEN_<пиксель>), вводит владелец на странице «setup».
  */
 var PIXELS = {
   '/': '1711007687207002', '/index.html': '1711007687207002',
@@ -66,8 +66,9 @@ function saveTelegram(token) {
 
 // Conversions API: событие Lead с тем же event_id, что у пикселя в браузере (Meta убирает дубли).
 function capi_(p) {
-  var token = PropertiesService.getScriptProperties().getProperty('CAPI_TOKEN');
+  var props = PropertiesService.getScriptProperties();
   var pixel = PIXELS[p.page] || PIXELS['/'];
+  var token = props.getProperty('CAPI_TOKEN_' + pixel) || props.getProperty('CAPI_TOKEN');
   if (!token || !pixel) return;
   var user = { client_user_agent: String(p.ua || '').slice(0, 500) };
   if (p.fbp) user.fbp = p.fbp;
@@ -106,8 +107,14 @@ function saveCapi(token) {
     (r.getResponseCode() === 200 ? ok : bad).push(id);
   });
   if (!ok.length) throw new Error('Ключ не даёт доступа ни к одному пикселю');
-  PropertiesService.getScriptProperties().setProperty('CAPI_TOKEN', token);
-  return 'Сохранено. Доступ к пикселям: ' + ok.length + ' из ' + (ok.length + bad.length) + (bad.length ? '. Нет доступа: ' + bad.join(', ') : '');
+  var props = PropertiesService.getScriptProperties();
+  ok.forEach(function (id) { props.setProperty('CAPI_TOKEN_' + id, token); });
+  // какие пиксели уже подключены (этим или прошлыми ключами)
+  var names = { '1711007687207002': 'главная', '2412799329256930': 'недвижимость', '1140470378908940': 'медицина', '1190781723620946': 'РФ-таргет' };
+  var done = Object.keys(names).filter(function (id) { return props.getProperty('CAPI_TOKEN_' + id); });
+  var left = Object.keys(names).filter(function (id) { return done.indexOf(id) < 0; });
+  return 'Сохранено. Подключены: ' + done.map(function (id) { return names[id]; }).join(', ') +
+    (left.length ? '. Ещё нужен ключ для: ' + left.map(function (id) { return names[id]; }).join(', ') : '. Все 4 пикселя подключены.');
 }
 
 var SETUP_HTML =
