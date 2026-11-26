@@ -2,7 +2,13 @@
    Заполните ID ниже — пустая строка = выключено. */
 var SITE = {
   GA4_ID: 'G-ZRF220BEH6', // GA4: аккаунт «at leads», ресурс atleads.pro
-  PIXEL_ID: '1711007687207002', // Meta Pixel «at leads site (atleads.pro)», бизнес Atai Project
+  PIXEL_ID: '1711007687207002', // Meta Pixel главной «at leads site (atleads.pro)», бизнес Atai Project
+  // 26.11.2026: у каждой нишевой страницы свой пиксель (решение Атая). Тот же список — в Apps Script (Conversions API).
+  PIXELS: {
+    '/nedvizhimost.html': '2412799329256930', // «at leads — Недвижимость»
+    '/medicina.html': '1140470378908940',     // «at leads — Медицина»
+    '/rf-target.html': '1190781723620946'     // «at leads — РФ-таргет»
+  },
   WHATSAPP: '996555525572', // номер только цифрами: после заявки кнопка «Перейти в WhatsApp»
   LEADS_URL: 'https://script.google.com/macros/s/AKfycby7v8TAu1KKwP-l9yCbSn2w6aFMQ8oh3Zg4FeasAY5yVMRxGPu_FlqTe-gwi8e3IQMX/exec' // Apps Script «leads»: Google Таблица + Telegram
 };
@@ -21,15 +27,16 @@ var SITE = {
   }
   if (SITE.PIXEL_ID) {
     !function (f, b, e, v, n, t, s) { if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); }; if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = []; t = b.createElement(e); t.async = !0; t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s); }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', SITE.PIXEL_ID);
+    fbq('init', SITE.PIXELS[location.pathname] || SITE.PIXEL_ID);
     fbq('track', 'PageView');
   }
 })();
 
-function track(ga, fb, params) {
+function track(ga, fb, params, eventId) {
   try { if (window.gtag) gtag('event', ga, params || {}); } catch (e) {}
-  try { if (window.fbq) fbq(fb.std ? 'track' : 'trackCustom', fb.name, params || {}); } catch (e) {}
+  try { if (window.fbq) fbq(fb.std ? 'track' : 'trackCustom', fb.name, params || {}, eventId ? { eventID: eventId } : undefined); } catch (e) {}
 }
+function cookie(n) { var m = document.cookie.match('(?:^|; )' + n + '=([^;]*)'); return m ? decodeURIComponent(m[1]) : ''; }
 
 /* ---------- UTM: запоминаем первый вход в сессии ---------- */
 var ATTR_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid', 'gclid'];
@@ -76,7 +83,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     btn.disabled = true;
     if (err) err.hidden = true;
-    var body = new URLSearchParams(new FormData(form)).toString();
+    // Conversions API: один ID события для браузера и сервера (без дублей), куки Meta и браузер посетителя
+    var eventId = 'lead-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10);
+    var fbc = cookie('_fbc') || (a.fbclid ? 'fb.1.' + Date.now() + '.' + a.fbclid : '');
+    var params = new URLSearchParams(new FormData(form));
+    params.set('event_id', eventId); params.set('fbp', cookie('_fbp')); params.set('fbc', fbc);
+    params.set('ua', navigator.userAgent); params.set('url', location.href.split('#')[0]);
+    var body = params.toString();
     var send = SITE.LEADS_URL
       // Apps Script: ответ непрозрачный (no-cors), поэтому успехом считаем доставку запроса.
       ? fetch(SITE.LEADS_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body })
@@ -86,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!r.ok) throw new Error(r.status);
       form.querySelector('.form__body').hidden = true;
       done.hidden = false;
-      track('generate_lead', { name: 'Lead', std: true }, { page: location.pathname });
+      track('generate_lead', { name: 'Lead', std: true }, { page: location.pathname }, eventId);
       if (SITE.WHATSAPP) {
         var name = (form.querySelector('[name="name"]') || {}).value || '';
         var text = 'Здравствуйте! Я ' + name + ', оставил(а) заявку на разбор на сайте at leads.';
